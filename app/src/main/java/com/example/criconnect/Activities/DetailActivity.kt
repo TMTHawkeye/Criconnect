@@ -6,8 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.criconnect.R
 import com.example.criconnect.databinding.ActivityDetailBinding
+import java.io.Serializable
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(),Serializable {
     lateinit var binding : ActivityDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

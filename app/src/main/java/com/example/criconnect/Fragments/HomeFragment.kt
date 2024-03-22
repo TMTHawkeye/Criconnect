@@ -1,23 +1,28 @@
 package com.example.criconnect.Fragments
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.criconnect.Activities.TournamentDataActivity
+import com.example.criconnect.Adapters.SliderAdapter
 import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.FragmentHomeBinding
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
+import com.smarteist.autoimageslider.SliderAnimations
+import com.smarteist.autoimageslider.SliderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
+    val teamViewModel : TeamViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,27 +30,47 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        val slideModels = ArrayList<SlideModel>()
-        slideModels.add(SlideModel(R.drawable.image5, "image0", ScaleTypes.FIT))
-        slideModels.add(SlideModel(R.drawable.image4, "image1", ScaleTypes.FIT))
-        slideModels.add(SlideModel(R.drawable.image3, "image2", ScaleTypes.FIT))
-        slideModels.add(SlideModel(R.drawable.images, "image3", ScaleTypes.FIT))
-        slideModels.add(SlideModel(R.drawable.imag1, "image4", ScaleTypes.FIT))
-        binding.imageslider.setImageList(slideModels, ScaleTypes.FIT)
-
-
-
         binding.iconImageView.setOnClickListener {
             val intent = Intent(requireContext(), TournamentDataActivity::class.java)
             startActivity(intent)
-
-//            teamViewModel.getTeamData {
-//                binding.rv.setBackgroundDrawable(it?.teamLogo)
-//            }
         }
-
-
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val adapter = SliderAdapter(requireContext())
+        val slideModels = ArrayList<SlideModel>()
+
+        teamViewModel.getTournament {tournamentList->
+            binding.progressBar.visibility=View.VISIBLE
+            if(tournamentList?.size!=0) {
+                tournamentList?.forEach { tournamentItem ->
+                    slideModels.add(
+                        SlideModel(
+                            tournamentItem.tournamentName,
+                            tournamentItem.tournamentName,
+                            ScaleTypes.FIT
+                        )
+                    )
+                    adapter.addItem(tournamentItem)
+                    binding.progressBar.visibility=View.GONE
+
+                }
+            }
+            else{
+
+            }
+        }
+        binding.sliderView.setSliderAdapter(adapter)
+        binding.sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM)
+        binding.sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        binding.sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_RTL)
+        binding.sliderView.setIndicatorSelectedColor(requireContext().getColor(R.color.dark_red))
+        binding.sliderView.setIndicatorUnselectedColor(Color.GRAY)
+        binding.sliderView.setScrollTimeInSec(4)
+
+        binding.sliderView.startAutoCycle()
     }
 
 }

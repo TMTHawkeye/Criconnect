@@ -82,5 +82,5 @@ dependencies {
     implementation ("io.insert-koin:koin-android:3.5.0")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
-
+    implementation ("com.github.smarteist:autoimageslider:1.4.0")
 }

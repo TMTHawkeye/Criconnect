@@ -16,6 +16,10 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.addTournamentToFirebase(tournament,callback)
     }
 
+    fun registerTeamInTournament(tournamentId: String?,callback: (Boolean) -> Unit) {
+        repository.registerTeamInTournament(tournamentId,callback)
+    }
+
     fun getTournament(callback: (List<TournamentData>?)->Unit){
         repository.getAllTournamentsFromFirebase(callback)
     }

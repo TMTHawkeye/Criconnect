@@ -36,9 +36,19 @@
     <string name="mobile">Mobile</string>
     <string name="registered_user_since">Registered user since</string>
     <string name="user_display_picture"> User display picture</string>
+    <string name="location">Location : </string>
+    <string name="entry_fee">Entry Fee</string>
+    <string name="winning_prize">Winning Prize</string>
+    <string name="register_team">Register Team</string>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+
+    <style name="textStyle_header">
+
+        <item name="android:textSize">@dimen/_14sdp</item>
+        <item name="android:textColor">@color/dark_red</item>
     </style>
 </resources>

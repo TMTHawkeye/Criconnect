@@ -2,6 +2,7 @@ package com.example.criconnect.Adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,15 +10,18 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criconnect.Activities.DetailActivity
+import com.example.criconnect.Activities.TournamentDetailActivity
+import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.DataClass
 import com.example.criconnect.ModelClasses.TournamentData
 import com.example.criconnect.R
+import com.example.criconnect.databinding.ItemTournamentBinding
 import com.example.criconnect.databinding.RecyclerItemBinding
+import java.io.Serializable
 
 class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
-    RecyclerView.Adapter<MyViewHolder>() {
+    RecyclerView.Adapter<MyViewHolder>(),Serializable {
 
-    val context: Context? = ctxt
     var dataList: List<TournamentData>? = dataListt
 
     fun setSearchList(dataSearchList: List<TournamentData>) {
@@ -25,23 +29,24 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
         notifyDataSetChanged()
     }
 
-   lateinit var binding:RecyclerItemBinding
+   lateinit var binding:ItemTournamentBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        binding=RecyclerItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        binding=ItemTournamentBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.binding.recImage.setImageDrawable(dataList!![position].tournamentLogo)
+        val base64toDrawable = base64ToDrawable( dataList?.get(position)?.tournamentLogo)
+        holder.binding.tournamentImage.setImageDrawable(base64toDrawable)
         holder.binding.recTitle.setText(dataList!![position].tournamentName)
         holder.binding.recLocation.setText(dataList!![position].tournamentLocation)
+
+        Log.d("TAGTournamentid", "onCreate: ${dataList?.get(position)?.tournamentId}")
+
         holder.binding.recCard.setOnClickListener {
-            val intent = Intent(context, DetailActivity::class.java)
-//            intent.putExtra("Image", dataList!![holder.adapterPosition].dataImage)
-//            intent.putExtra("Title", dataList!![holder.adapterPosition].dataTitle)
-//            intent.putExtra("Desc", dataList!![holder.adapterPosition].dataDesc)
-            context!!.startActivity(intent)
+            val intent = Intent(ctxt, TournamentDetailActivity::class.java).putExtra("tournamentId",dataList?.get(position)?.tournamentId)
+            ctxt.startActivity(intent)
         }
     }
 
@@ -50,4 +55,4 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
     }
 }
 
-class MyViewHolder(val binding: RecyclerItemBinding) : RecyclerView.ViewHolder(binding.root)
+class MyViewHolder(val binding: ItemTournamentBinding) : RecyclerView.ViewHolder(binding.root)

@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.criconnect.HelperClasses.drawableToBase64
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
 import com.example.criconnect.R
@@ -32,8 +33,10 @@ class TournamentRegistrationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.saveButton.setOnClickListener {
+            val base64toDrawable = drawableToBase64(selectedImageDrawable)?:""
             val tournament = TournamentData(
-                selectedImageDrawable,
+                null,
+                base64toDrawable,
                 binding.tournNameET.text.toString(),
                 binding.groundAddressET.text.toString(),
                 binding.entryFeeET.text.toString(),

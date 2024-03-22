@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable
 import android.util.Base64
 import androidx.annotation.NonNull
 import androidx.lifecycle.MutableLiveData
+import com.example.criconnect.HelperClasses.base64ToDrawable
+import com.example.criconnect.HelperClasses.drawableToBase64
 import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
@@ -88,14 +90,15 @@ class TeamRepository(val context: Context) {
         val tournamentId = databaseReference?.push()?.key
 
         tournamentId?.let { id ->
-            val tournamentLogoBase64 = tournament.tournamentLogo?.let { drawableToBase64(it) }
+            tournament.tournamentId=id
 
             val tournamentData = hashMapOf(
+                "tournamentId" to id,
                 "tournamentName" to tournament.tournamentName,
                 "tournamentLocation" to tournament.tournamentLocation,
                 "tournamentEntryFee" to tournament.tournamentEntryFee,
                 "tournamentWinningPrize" to tournament.tournamentWinningPrize,
-                "tournamentLogo" to tournamentLogoBase64
+                "tournamentLogo" to tournament.tournamentLogo
             )
 
             // Save tournament data under the generated unique ID
@@ -111,6 +114,44 @@ class TeamRepository(val context: Context) {
         }
     }
 
+    fun registerTeamInTournament(tournamentId: String?, callback: (Boolean) -> Unit) {
+        val tournamentRef = firebaseDatabase?.getReference("TournamentManagement")?.child("$tournamentId")
+        val currentUser = getLoggedInUser()
+
+        currentUser?.let { user ->
+            val currentUserUUID = user.uid
+            val userTeamReference = firebaseDatabase?.getReference("TeamManagement")?.child(currentUserUUID)
+
+            userTeamReference?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Team exists, proceed with registration
+                        val teamId = dataSnapshot.key
+                        val teamData = dataSnapshot.value as? Map<String, Any>
+
+                        // Store team data under the tournament management
+                        teamData?.let { team ->
+                            tournamentRef?.child("teams")?.child("$teamId")?.setValue(team)
+                                ?.addOnSuccessListener {
+                                    callback.invoke(true) // Indicate success
+                                }
+                                ?.addOnFailureListener {
+                                    callback.invoke(false) // Indicate error occurred
+                                }
+                        }
+                    } else {
+                        callback.invoke(false) // Team does not exist, registration failed
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.invoke(false) // Indicate error occurred
+                }
+            })
+        } ?: callback.invoke(false) // If currentUser is null, callback with false
+    }
+
+
     fun getAllTournamentsFromFirebase(callback: (List<TournamentData>?) -> Unit) {
         databaseReference = firebaseDatabase?.getReference("TournamentManagement")
 
@@ -123,6 +164,7 @@ class TeamRepository(val context: Context) {
 
                     // Check if tournament data exists
                     if (tournamentData != null) {
+                        val tournamentId = tournamentData["tournamentId"] as? String ?: ""
                         val tournamentName = tournamentData["tournamentName"] as? String ?: ""
                         val tournamentLocation = tournamentData["tournamentLocation"] as? String ?: ""
                         val tournamentEntryFee = tournamentData["tournamentEntryFee"] as? String ?: ""
@@ -130,10 +172,10 @@ class TeamRepository(val context: Context) {
                         val tournamentLogoBase64 = tournamentData["tournamentLogo"] as? String
 
                         // Convert base64 encoded team logo to Drawable
-                        val teamLogoDrawable = tournamentLogoBase64?.let { base64ToDrawable(it) }
 
                         val tournament = TournamentData(
-                            tournamentLogo = teamLogoDrawable,
+                            tournamentId=tournamentId,
+                            tournamentLogo = tournamentLogoBase64,
                             tournamentName = tournamentName,
                             tournamentLocation = tournamentLocation,
                             tournamentEntryFee = tournamentEntryFee,
@@ -160,13 +202,7 @@ class TeamRepository(val context: Context) {
 
 
 
-    private fun drawableToBase64(drawable: Drawable): String {
-        val bitmap = (drawable as BitmapDrawable).bitmap
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val byteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
-    }
+
 
 
     fun addPlayerToTeamFirebase(player: PlayerData, callback: (Boolean) -> Unit) {
@@ -294,10 +330,7 @@ class TeamRepository(val context: Context) {
     }
 
     // Function to convert base64 encoded string to Drawable
-    private fun base64ToDrawable(base64: String): Drawable? {
-        val decodedBytes = Base64.decode(base64, Base64.DEFAULT)
-        return BitmapDrawable(Resources.getSystem(), BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size))
-    }
+
 
 
 
