@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app_custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundpic">
+
+    <LinearLayout
+        android:id="@+id/detialofdashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/Tournamentname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Tournament"
+            android:textColor="@color/lavender"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="190dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/baseline_keyboard_double_arrow_right_24" />
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/detialofdashboard"
+        android:layout_marginStart="20dp"
+
+        android:layout_marginEnd="20dp"
+        app:cardBackgroundColor="@color/lavender"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp">
+
+        <com.denzcoskun.imageslider.ImageSlider
+            android:id="@+id/imageslider"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:iss_auto_cycle="true"
+            app:iss_corner_radius="20"
+            app:iss_delay="1000"
+            app_custom:iss_period="1000" />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="330dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/scorebox"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/captionname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="Asim (Caption Name)"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="19sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="10dp"
+            android:alpha="0.5"
+            android:background="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:elevation="5dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/posts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match played"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/postsNumber"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:elevation="5dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/followers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match Won"
+                    android:textAlignment="center"
+
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/followersNo"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:elevation="5dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/following"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match loss"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <TextView
+                    android:id="@+id/followingNo"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/detialofmatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="290dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/totalmatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Profile"
+            android:textColor="@color/lavender"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

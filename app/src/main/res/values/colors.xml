@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="Red">#8692f7</color>
+    <color name="my_button_color">#FF5733</color>
+    <color name="lavender">#8692f7</color>
+    <color name="high_contrast_text_color">#FFFFFF</color> <!-- Example high-contrast text color -->
+    <color name="colorPrimary">#FFB20C</color>
+    <color name="colorPrimaryDark">#DE9B0B</color>
+    <color name="colorAccent">#FFB20C</color>
+    <color name="textHeadline">#434343</color>
+    <color name="textDescription">#686868</color>
+    <color name="lightGrey">#EAEAEA</color>
+    <color name="colortextfirst">#000000</color>
+    <color name="colortextsecond">#777474</color>
+    <color name="darkGray">#a9a9a9</color>
+    <color name="Dialog_color_1">#FFEB3B</color>
+    <color name="Dialog_color_2">#3B5796</color>
+    <color name="grey">#2d3032</color>
+    <color name="selected_tab_color">#8692f7</color>
+    <color name="special1">#5E9299</color>
+    <color name="special">#290907</color>
+    <color name="dark_red">#8692f7</color>
+</resources>

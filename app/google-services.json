@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "409818433315",
+    "firebase_url": "https://crickconnect-6cd6e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "crickconnect-6cd6e",
+    "storage_bucket": "crickconnect-6cd6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409818433315:android:754d262621abd37f16ee96",
+        "android_client_info": {
+          "package_name": "com.example.criconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226744513248-pkgoihdrbiqhe9nbovcld467q84ucj40.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSXRB5Z9se7k-mMB03fSavt1ujBzm2nEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client":[
+            {
+              "client_id": "226744513248-pkgoihdrbiqhe9nbovcld467q84ucj40.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

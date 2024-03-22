@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/backgroundpic"
+        android:scaleType="centerCrop" />
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/motion_scene_splash"
+        tools:context=".Activity_Splash_Login">
+
+        <!-- Your existing views and constraints here -->
+
+
+
+
+        <ImageView
+            android:id="@+id/imgView_logo"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="80dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/circlelogo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgView_logo_rays"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:layout_marginTop="80dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/sizeodoutside"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgView_cloudLeft"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/cloud"
+            android:translationX="-20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/lightGrey" />
+
+        <ImageView
+            android:id="@+id/imgView_cloudRight"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="120dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/cloud"
+            android:translationX="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/lightGrey" />
+
+        <LinearLayout
+            android:id="@+id/linlay_inputs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:alpha="1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgView_cloudRight">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="Welcome Back"
+                android:textColor="@color/textHeadline"
+                android:textSize="@dimen/_17ssp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Sign in to continue"
+                android:textColor="@color/textDescription"
+                android:textSize="@dimen/_12ssp" />
+
+            <EditText
+                android:id="@+id/editText_login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edittext_bg"
+                android:drawableStart="@drawable/ic_baseline_email_24"
+                android:drawableLeft="@drawable/ic_baseline_email_24"
+                android:drawablePadding="@dimen/_16sdp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="@dimen/_12sdp"
+                android:textSize="@dimen/_12ssp" />
+            <!--        <ImageView-->
+            <!--            android:layout_width="30dp"-->
+            <!--            android:layout_height="32dp"-->
+            <!--            android:id="@+id/imageView_show_hide_pwd"-->
+            <!--            />-->
+            <EditText
+                android:id="@+id/editText_login_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edittext_bg"
+                android:drawableStart="@drawable/ic_baseline_lock_24"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawableEnd="@drawable/ic_baseline_visibility_24"
+                android:drawableRight="@drawable/ic_baseline_visibility_24"
+                android:drawablePadding="@dimen/_16sdp"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="@dimen/_12sdp"
+                android:textSize="@dimen/_12ssp" />
+            <com.example.criconnect.CustomClasses.CustomSpinner
+                android:id="@+id/spinner_fruits"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:dropDownVerticalOffset="40dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/bg_spinner_fruit"/>
+
+            <Button
+                android:id="@+id/tv_loginbutton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_bg"
+                android:text="Login"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/tv_forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:alpha="1"
+            android:layout_marginRight="30dp"
+            android:text="Forgot Password?"
+            android:textColor="@color/textDescription"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linlay_inputs" />
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_button"
+            android:textColor="@color/textHeadline"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</FrameLayout>

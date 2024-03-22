@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.Criconnect" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+
+    </style>
+
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="MyRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorControlNormal">#4D000000</item>
+        <item name="colorControlActivated">@color/Dialog_color_1</item>
+    </style>
+
+    <style name="Theme.Criconnect" parent="Base.Theme.Criconnect" />
+
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@color/selected_tab_color</item>
+    </style>
+</resources>

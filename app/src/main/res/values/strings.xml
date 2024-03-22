@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Criconnect</string>
+
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="register_button">Don\'t have an account? <b>Register Here</b></string>
+    <string name="circle_logo_description">Circle logo for my app</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="try_again">Try Again</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="date">Data will be provided after backend database will be connected.
+        </string>
+    <string name="rating">Data will be provided after backend database will be connected.</string>
+    <string name="edit">Data will be provided after backend database will be connected.
+        </string>
+    <string name="camera">Data will be provided after backend database will be connected.</string>
+    <string name="recyclerview">Data will be provided after backend database will be connected.
+    </string>
+    <string name="lorem_ipsum">
+        Data will be provided after backend database will be connected.
+    </string>
+    <string name="title_activity_player_dashboard">playerDashboard</string>
+    <string name="title_activity_dashboardfororganizer">dashboardfororganizer</string>
+    <string name="title_activity_tournamentdashboard">tournamentdashboard</string>
+    <string name="name">Name</string>
+    <string name="loading">Loading</string>
+    <string name="email">Email</string>
+    <string name="dob">Date of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="mobile">Mobile</string>
+    <string name="registered_user_since">Registered user since</string>
+    <string name="user_display_picture"> User display picture</string>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+</resources>
