@@ -56,7 +56,6 @@
                     android:backgroundTint="@color/white"
                     android:clickable="true"
                     app:fabSize="mini"
-
                     app:layout_constraintBottom_toBottomOf="@+id/profileImg"
                     app:layout_constraintEnd_toEndOf="@+id/profileImg"
                     app:srcCompat="@drawable/ic_photo_camera_black_48dp" />
@@ -119,8 +118,7 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--            Organizer Email-->
-            <com.google.android.material.textfield.TextInputLayout
+             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"

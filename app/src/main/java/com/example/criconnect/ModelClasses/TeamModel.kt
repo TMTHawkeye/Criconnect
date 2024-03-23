@@ -3,7 +3,8 @@ package com.example.criconnect.ModelClasses
 import android.graphics.drawable.Drawable
 
 data class TeamModel(
-    var teamLogo : Drawable?=null,
+    var teamId :String = "",
+    var teamLogo : String?=null,
     var teamName: String = "",
     var captainName: String = "",
     var city: String = "",

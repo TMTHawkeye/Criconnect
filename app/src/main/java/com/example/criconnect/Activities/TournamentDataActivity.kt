@@ -77,6 +77,8 @@ class TournamentDataActivity : AppCompatActivity() {
         }
     }
 
+
+
     fun setAdapter(tournamentList: List<TournamentData>?) {
         val gridLayoutManager = GridLayoutManager(this@TournamentDataActivity, 1)
         binding.recyclerView.setLayoutManager(gridLayoutManager)

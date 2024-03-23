@@ -5,6 +5,7 @@ import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
 import com.example.criconnect.Repositories.TeamRepository
+import com.google.firebase.auth.FirebaseUser
 
 class TeamViewModel(val repository: TeamRepository) : ViewModel() {
 
@@ -20,6 +21,14 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.registerTeamInTournament(tournamentId,callback)
     }
 
+    fun getRegisteredTeamsInTournament(tournamentId: String?,callback: (List<TeamModel>?) -> Unit){
+        repository.getRegisteredTeamsInTournament(tournamentId,callback)
+    }
+
+   /* fun registerOrganizedMatchesInTournament(tournamentId: String?,dummyTeams : List<TeamModel>?,callback: (Boolean) -> Unit){
+        repository.registerOrganizedMatchesInTournament(tournamentId,dummyTeams,callback)
+    }
+*/
     fun getTournament(callback: (List<TournamentData>?)->Unit){
         repository.getAllTournamentsFromFirebase(callback)
     }
@@ -36,5 +45,12 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.getTeamFromFirebase(callback)
     }
 
+    fun storeMatchesinFirebase(tournamentId: String?,matches: List<Pair<TeamModel, TeamModel>>){
+        repository.storeMatchesInDatabase(tournamentId,matches)
+    }
+
+    fun getLoggedInUser() : FirebaseUser?{
+       return repository.getLoggedInUser()
+    }
 
 }

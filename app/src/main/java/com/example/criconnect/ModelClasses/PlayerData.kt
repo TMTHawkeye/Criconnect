@@ -3,6 +3,7 @@ package com.example.criconnect.ModelClasses
 import java.io.Serializable
 
 data class PlayerData(
+    var playerLogo: String?=null,
     var playerName : String = "",
     var fatherName : String = "",
     var playerCity : String = "",

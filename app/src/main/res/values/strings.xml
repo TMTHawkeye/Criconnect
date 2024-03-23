@@ -40,6 +40,11 @@
     <string name="entry_fee">Entry Fee</string>
     <string name="winning_prize">Winning Prize</string>
     <string name="register_team">Register Team</string>
+    <string name="batsmanHand">Batsman Hand : </string>
+    <string name="fatherName">Father Name : </string>
+    <string name="playerAge">"Age : "</string>
+    <string name="city">"City : "</string>
+    <string name="about">"About : "</string>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>

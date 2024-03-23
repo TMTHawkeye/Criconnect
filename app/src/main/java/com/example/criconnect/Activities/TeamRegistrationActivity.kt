@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.criconnect.HelperClasses.drawableToBase64
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
@@ -37,8 +38,9 @@ class TeamRegistrationActivity : AppCompatActivity() {
 
 
         binding.saveButton.setOnClickListener {
+            val base64Image = drawableToBase64(selectedImageDrawable)
             val team = TeamModel(
-                selectedImageDrawable,
+                base64Image,
                 binding.teamNameET.text.toString(),
                 binding.captainNameET.text.toString(),
                 binding.teamCityET.text.toString(),
