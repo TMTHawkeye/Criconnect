@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 
 data class TeamModel(
     var teamId :String = "",
-    var teamLogo : String?=null,
+    var teamLogo : String?="",
     var teamName: String = "",
     var captainName: String = "",
     var city: String = "",

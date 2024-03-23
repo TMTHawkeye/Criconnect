@@ -11,14 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.criconnect.Activities.PlayerProfileActivity
 import com.example.criconnect.Adapters.PlayerAdapter
-import com.example.criconnect.ModelClasses.DataClass
+import com.example.criconnect.Interfaces.PlayerListner
 import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.FragmentTeamManagementBinding
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.Locale
 
-class TeamManagementFragment : Fragment() {
+class TeamManagementFragment : Fragment() , PlayerListner{
     lateinit var binding : FragmentTeamManagementBinding
     val teamViewModel : TeamViewModel by sharedViewModel()
 
@@ -64,7 +64,7 @@ class TeamManagementFragment : Fragment() {
     private fun setAdapter(playerList: List<PlayerData>?) {
         val gridLayoutManager = GridLayoutManager(requireActivity(), 1)
         binding.recyclerView.setLayoutManager(gridLayoutManager)
-        adapter = PlayerAdapter(requireActivity(), playerList)
+        adapter = PlayerAdapter(requireActivity(), playerList,this)
         binding.progressBar.visibility=View.GONE
         binding.recyclerView.setAdapter(adapter)
     }
@@ -89,4 +89,16 @@ class TeamManagementFragment : Fragment() {
 
     }
 
- }
+    override fun onDeletePlayer(player: PlayerData) {
+        teamViewModel.deletePlayerFromTeam(player?.playerId) { success ->
+            if (success) {
+                val updatedList = dataList?.filter { it.playerId != player.playerId }
+                adapter?.updateList(updatedList)
+                Toast.makeText(requireContext(), "Deleted Successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Unable to delete, tryagain!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+}

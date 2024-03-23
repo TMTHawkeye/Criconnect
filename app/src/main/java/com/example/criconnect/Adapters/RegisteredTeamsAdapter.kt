@@ -27,8 +27,8 @@ class RegisteredTeamsAdapter(
      }
 
     override fun onBindViewHolder(holder: viewHolder, position: Int) {
-        val base64toDrawable = base64ToDrawable( teamsList?.get(position)?.teamLogo)
-        holder.binding.tournamentImage.setImageDrawable(base64toDrawable)
+//        val base64toDrawable = base64ToDrawable( teamsList?.get(position)?.teamLogo)
+//        holder.binding.tournamentImage.setImageDrawable(base64toDrawable)
         holder.binding.recTitle.setText(teamsList!![position].teamName)
         holder.binding.recLocation.setText(teamsList[position].homeGround)
      }

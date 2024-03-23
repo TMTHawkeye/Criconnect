@@ -26,6 +26,7 @@
             android:layout_marginBottom="80dp">
 
             <TextView
+                android:id="@+id/team_reg_title_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Team Registration"
@@ -33,13 +34,34 @@
                 android:textAlignment="center"
                 android:textColor="@color/lavender"/>
 
-            <ImageView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/uploadimg"
-                android:id="@+id/uploadImage"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"/>
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_10sdp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImg"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/circlelogos"
+                    app:civ_border_color="#FFFFFF"
+                    app:civ_border_width="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/changeprofile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/white"
+                    android:clickable="true"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="@+id/profileImg"
+                    app:layout_constraintEnd_toEndOf="@+id/profileImg"
+                    app:srcCompat="@drawable/ic_photo_camera_black_48dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <!--            Tournament Name  -->
             <com.google.android.material.textfield.TextInputLayout

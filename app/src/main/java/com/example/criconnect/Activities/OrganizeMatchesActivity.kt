@@ -3,7 +3,8 @@ package com.example.criconnect.Activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.criconnect.Adapters.MatchesAdapter
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
@@ -29,9 +30,17 @@ class OrganizeMatchesActivity : AppCompatActivity() {
     }
 
     fun storeMatchesInDatabase(tournamentId: String?, matches: List<Pair<TeamModel, TeamModel>>) {
-        dataViewModel.storeMatchesinFirebase(tournamentId, matches)
+        dataViewModel.storeMatchesinFirebase(tournamentId, matches){
+            if(it){
+                setAdapter(matches)
+            }
+        }
     }
 
+    fun setAdapter(matches: List<Pair<TeamModel, TeamModel>>){
+        binding.matchesRV.layoutManager=LinearLayoutManager(this@OrganizeMatchesActivity)
+        binding.matchesRV.adapter=MatchesAdapter(this@OrganizeMatchesActivity,matches)
+    }
 
     private fun generateMatches(teamsList: List<TeamModel>?): List<Pair<TeamModel, TeamModel>> {
         val matches = mutableListOf<Pair<TeamModel, TeamModel>>()
@@ -39,16 +48,12 @@ class OrganizeMatchesActivity : AppCompatActivity() {
         if (teamsList != null && teamsList.size >= 2) {
             when (teamsList.size) {
                 3 -> {
-
-                    // Each team plays against the other two teams once
                     matches.add(Pair(teamsList[0], teamsList[1]))
                     matches.add(Pair(teamsList[1], teamsList[2]))
                     matches.add(Pair(teamsList[2], teamsList[0]))
 
-
                     val finalistMatch =
                         Pair(TeamModel(teamName = "Finalist 1"), TeamModel(teamName = "Finalist 2"))
-
                     matches.add(finalistMatch)
                 }
 
@@ -73,9 +78,7 @@ class OrganizeMatchesActivity : AppCompatActivity() {
 
                     val finalistMatch =
                         Pair(TeamModel(teamName = "Finalist 1"), TeamModel(teamName = "Finalist 2"))
-
                     matches.add(finalistMatch)
-
                 }
 
                 8 -> { // For 8 teams

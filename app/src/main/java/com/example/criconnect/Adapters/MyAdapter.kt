@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.criconnect.Activities.DetailActivity
 import com.example.criconnect.Activities.TournamentDetailActivity
 import com.example.criconnect.HelperClasses.base64ToDrawable
@@ -38,7 +39,7 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val base64toDrawable = base64ToDrawable( dataList?.get(position)?.tournamentLogo)
-        holder.binding.tournamentImage.setImageDrawable(base64toDrawable)
+        Glide.with(ctxt).load(base64toDrawable).error(ctxt.getDrawable(R.drawable.circlelogo)).into(holder.binding.tournamentImage)
         holder.binding.recTitle.setText(dataList!![position].tournamentName)
         holder.binding.recLocation.setText(dataList!![position].tournamentLocation)
 

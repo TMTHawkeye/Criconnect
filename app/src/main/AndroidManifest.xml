@@ -24,11 +24,12 @@
         android:theme="@style/Theme.Criconnect"
         tools:targetApi="31">
         <activity
-            android:name=".Activities.OrganizeMatchesActivity"
+            android:name=".Activities.PlayerDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.PlayerDetailActivity"
+            android:name=".Activities.OrganizeMatchesActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activities.TournamentDetailActivity"
             android:exported="false" />

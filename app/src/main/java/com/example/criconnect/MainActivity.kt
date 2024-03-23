@@ -1,6 +1,7 @@
 package com.example.criconnect
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -25,22 +26,37 @@ import com.example.criconnect.Fragments.HomeFragment
 import com.example.criconnect.Fragments.SettingsFragment
 import com.example.criconnect.Fragments.TeamManagementFragment
 import com.example.criconnect.Fragments.TeamStatisticsFragment
+import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.ViewModels.UserViewModel
 import com.example.criconnect.databinding.ActivityMainBinding
+import com.example.criconnect.databinding.BottomsheetlayoutBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import io.paperdb.Paper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    lateinit var binding : ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     private var authProfile: FirebaseAuth? = null
+      val teamViewModel:TeamViewModel by viewModel()
+    var team:TeamModel?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+//        CoroutineScope(Dispatchers.Main).launch {
+//            isRegistered = getRegisteredState()
+//        }
 
         binding.navView.setNavigationItemSelectedListener(this)
 
@@ -86,34 +102,39 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun showBottomDialog() {
+        val dialogBinding = BottomsheetlayoutBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.bottomsheetlayout)
-        val tournamentLayout = dialog.findViewById<LinearLayout>(R.id.layoutTournament)
-        val videoLayout = dialog.findViewById<LinearLayout>(R.id.layoutVideo)
-        val shortsLayout = dialog.findViewById<LinearLayout>(R.id.layoutShorts)
-        val liveLayout = dialog.findViewById<LinearLayout>(R.id.layoutLive)
-        val cancelButton = dialog.findViewById<ImageView>(R.id.cancelButton)
-        tournamentLayout.setOnClickListener {
+        dialog.setContentView(dialogBinding.root)
+        dialogBinding.layoutTournament.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TournamentRegistrationActivity::class.java)
             startActivity(intent)
         }
 
-        videoLayout.setOnClickListener {
+        if(team!=null){
+            dialogBinding.layoutVideo.visibility=View.GONE
+        }
+
+        dialogBinding.layoutVideo.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
+                .putExtra("intentFrom","FROM_REGISTER")
+
             startActivity(intent)
         }
-        shortsLayout.setOnClickListener {
+        dialogBinding.layoutShorts.setOnClickListener {
             dialog.dismiss()
-             val intent = Intent(this@MainActivity, PlayerProfileActivity::class.java)
+            val intent = Intent(this@MainActivity, PlayerProfileActivity::class.java)
             startActivity(intent)
         }
-        liveLayout.setOnClickListener {
-             dialog.dismiss()
-         }
-        cancelButton.setOnClickListener { dialog.dismiss() }
+        dialogBinding.layoutLive.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
+                .putExtra("intentFrom","FROM_EDIT")
+            startActivity(intent)
+        }
+        dialogBinding.cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
         dialog.window!!.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -158,9 +179,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            replaceFragment(faqFragment())
         } else if (itemId == R.id.nav_rateus) {
 //            showRateDialog()
-        }
-        else if(itemId==R.id.nav_logout){
-            authProfile= FirebaseAuth.getInstance()
+        } else if (itemId == R.id.nav_logout) {
+            authProfile = FirebaseAuth.getInstance()
             authProfile!!.signOut()
             Toast.makeText(this@MainActivity, "Logged Out", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MainActivity, SplashLoginActivity::class.java)
@@ -175,6 +195,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //rate us dialog box start
 
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        teamViewModel.getTeamData{teamData,isAvailable->
+//            if(isAvailable){
+//                if(teamData!=null) {
+//                    Paper.book().write("OWNTEAM", teamData)
+//                    team= teamData
+//                }
+//            }
+//
+//        }
+//    }
+
+    suspend fun getRegisteredState(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val sharedPreferences = getSharedPreferences("USERPREFERENCE", Context.MODE_PRIVATE)
+            sharedPreferences.getBoolean(
+                "isTeamRegistered",
+                false
+            ) // Default value is false if the key is not found
+        }
+    }
+
 
 //    private fun showRateDialog() {
 //        val rateUsDialog = RateUsDialog(this@Activity_Main)

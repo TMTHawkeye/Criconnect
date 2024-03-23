@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.RadioButton
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -29,24 +30,33 @@ class PlayerProfileActivity : AppCompatActivity() {
         binding=ActivityPlayerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+
         binding.saveButton.setOnClickListener {
-            val base64Img = drawableToBase64(selectedImageDrawable)
-            val player = PlayerData(
-                base64Img,
-                binding.playerName.text.toString(),
-                binding.fatherName.text.toString(),
-                binding.playerCity.text.toString(),
-                binding.playerAge.text.toString(),
-                binding.playerPhone.text.toString()
-            )
-            teamViewModel.savePlayer(player){
-                if(it){
-                    Toast.makeText(this@PlayerProfileActivity, "Player has been added to team!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                else{
-                    Toast.makeText(this@PlayerProfileActivity, "Problem registering player, Try again!", Toast.LENGTH_SHORT).show()
-                    finish()
+            if (validateFields()) {
+                val base64Img = drawableToBase64(selectedImageDrawable)
+                val specialtyId = binding.dailyWeeklyButtonView.checkedRadioButtonId
+                val batsmanHandId = binding.handsbatSide.checkedRadioButtonId
+
+
+                val specialtyText = findViewById<RadioButton>(specialtyId)?.text.toString()
+                val batsmanHandText = findViewById<RadioButton>(batsmanHandId)?.text.toString()
+
+                val player = PlayerData(
+                    playerId = base64Img,
+                    playerName = binding.playerName.text.toString(),
+                    fatherName = binding.fatherName.text.toString(),
+                    playerCity = binding.playerCity.text.toString(),
+                    playerAge = binding.playerAge.text.toString(),
+                    playerPhone = binding.playerPhone.text.toString(),
+                    speciality = specialtyText,
+                    batsmanhand = batsmanHandText,
+                    details = binding.playerDetails.text.toString()
+                )
+                teamViewModel.savePlayer(player,selectedImageDrawable) { success ->
+                    val message = if (success) "Player has been added to team!" else "Problem registering player, Try again!"
+                    Toast.makeText(this@PlayerProfileActivity, message, Toast.LENGTH_SHORT).show()
+                    if (success) finish()
                 }
             }
         }
@@ -87,4 +97,25 @@ class PlayerProfileActivity : AppCompatActivity() {
                 }
             })
     }
+
+    private fun validateFields(): Boolean {
+        val fields = listOf(
+            binding.playerName,
+            binding.fatherName,
+            binding.playerCity,
+            binding.playerAge,
+            binding.playerPhone,
+            binding.playerDetails
+        )
+
+        for (field in fields) {
+            if (field.text.isNullOrBlank()) {
+                field.error = "This field is required"
+                field.requestFocus()
+                return false
+            }
+        }
+        return true
+    }
+
 }

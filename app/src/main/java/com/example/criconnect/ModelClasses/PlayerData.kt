@@ -1,8 +1,10 @@
 package com.example.criconnect.ModelClasses
 
+import android.graphics.drawable.Drawable
 import java.io.Serializable
 
 data class PlayerData(
+    var playerId : String = "",
     var playerLogo: String?=null,
     var playerName : String = "",
     var fatherName : String = "",

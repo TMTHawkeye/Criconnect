@@ -28,25 +28,31 @@ class TeamRegistrationActivity : AppCompatActivity() {
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImagePath: String? = null
     private var selectedImageDrawable: Drawable? = null
-
+    val dataViewModel : TeamViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityTeamRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val intentFrom = intent?.getStringExtra("intentFrom")
 
+        if(intentFrom.equals("FROM_EDIT")){
+            binding.teamRegTitleId.text="Edit Team"
+        }
+//        else{
+//
+//        }
 
         binding.saveButton.setOnClickListener {
             val base64Image = drawableToBase64(selectedImageDrawable)
             val team = TeamModel(
-                base64Image,
-                binding.teamNameET.text.toString(),
-                binding.captainNameET.text.toString(),
-                binding.teamCityET.text.toString(),
-                binding.homeGroundET.text.toString()
+                teamName = binding.teamNameET.text.toString(),
+                captainName = binding.captainNameET.text.toString(),
+                city = binding.teamCityET.text.toString(),
+                homeGround = binding.homeGroundET.text.toString()
             )
-            teamViewModel.saveTeam(team){
+            teamViewModel.saveTeam(team,selectedImageDrawable){
                 if(it){
                     Toast.makeText(this@TeamRegistrationActivity, "Team has been created!", Toast.LENGTH_SHORT).show()
                     finish()
@@ -58,7 +64,7 @@ class TeamRegistrationActivity : AppCompatActivity() {
             }
         }
 
-        binding.uploadImage.setOnClickListener {
+        binding.changeprofile.setOnClickListener {
             openGallery()
         }
     }
@@ -85,7 +91,7 @@ class TeamRegistrationActivity : AppCompatActivity() {
             .into(object : CustomTarget<Drawable>() {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                     selectedImageDrawable = resource
-                    binding.uploadImage.setImageDrawable(resource)
+                    binding.profileImg.setImageDrawable(resource)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {

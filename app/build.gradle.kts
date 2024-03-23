@@ -61,6 +61,10 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-storage:20.3.0")
+    implementation ("com.firebaseui:firebase-ui-storage:7.2.0")
+
+
 
     //graph for bar chart
     implementation("com.github.philjay:MPAndroidChart:v3.0.2")
@@ -81,6 +85,10 @@ dependencies {
     /*Koin*/
     implementation ("io.insert-koin:koin-android:3.5.0")
 
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
     implementation ("com.github.smarteist:autoimageslider:1.4.0")
+
+    implementation ("io.github.pilgr:paperdb:2.7.2")
 }

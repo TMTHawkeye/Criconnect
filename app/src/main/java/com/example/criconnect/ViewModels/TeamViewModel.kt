@@ -1,5 +1,6 @@
 package com.example.criconnect.ViewModels
 
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
 import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ModelClasses.TeamModel
@@ -9,8 +10,8 @@ import com.google.firebase.auth.FirebaseUser
 
 class TeamViewModel(val repository: TeamRepository) : ViewModel() {
 
-    fun saveTeam(team: TeamModel,callback:(Boolean)->Unit) {
-        repository.addTeamToFirebase(team,callback)
+    fun saveTeam(team: TeamModel,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
+        repository.addTeamToFirebase(team,selectedDrawable,callback)
     }
 
     fun saveTournament(tournament: TournamentData,callback:(Boolean)->Unit) {
@@ -33,24 +34,28 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.getAllTournamentsFromFirebase(callback)
     }
 
-    fun savePlayer(player : PlayerData,callback: (Boolean) -> Unit){
-        repository.addPlayerToTeamFirebase(player,callback)
+    fun savePlayer(player : PlayerData, selectedDrawable: Drawable?, callback: (Boolean) -> Unit){
+        repository.addPlayerToTeamFirebase(player,selectedDrawable,callback)
     }
 
     fun getPlayersList(callback: (List<PlayerData>?)->Unit){
         repository.getListOfPlayersFromTeam(callback)
     }
 
-    fun getTeamData(callback: (TeamModel?) -> Unit){
+    fun getTeamData(callback: (TeamModel?,Boolean) -> Unit){
         repository.getTeamFromFirebase(callback)
     }
 
-    fun storeMatchesinFirebase(tournamentId: String?,matches: List<Pair<TeamModel, TeamModel>>){
-        repository.storeMatchesInDatabase(tournamentId,matches)
+    fun storeMatchesinFirebase(tournamentId: String?,matches: List<Pair<TeamModel, TeamModel>>, callback: (Boolean) -> Unit){
+        repository.storeMatchesInDatabase(tournamentId,matches,callback)
     }
 
     fun getLoggedInUser() : FirebaseUser?{
        return repository.getLoggedInUser()
+    }
+
+    fun deletePlayerFromTeam(playerId:String?,callback: (Boolean) -> Unit){
+        repository.deletePlayerFromTeam(playerId,callback)
     }
 
 }
