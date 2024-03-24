@@ -165,11 +165,11 @@ class SplashLoginActivity : AppCompatActivity() {
 
             if (firebaseUser != null) {
                 if (firebaseUser.isEmailVerified) {
-                    dataViewModel.getTeamData {teamData,isRegistered->
-                        CoroutineScope(Dispatchers.IO).launch {
-                            saveRegisteredState(isRegistered, this@SplashLoginActivity)
-                        }
-                    }
+//                    dataViewModel.getTeamData {teamData,isRegistered->
+//                        CoroutineScope(Dispatchers.IO).launch {
+//                            saveRegisteredState(isRegistered, this@SplashLoginActivity)
+//                        }
+//                    }
                     startActivity(Intent(this@SplashLoginActivity, MainActivity::class.java))
                     finish()
                 } else {

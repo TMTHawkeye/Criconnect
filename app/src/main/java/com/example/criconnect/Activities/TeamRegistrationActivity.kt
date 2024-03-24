@@ -1,6 +1,7 @@
 package com.example.criconnect.Activities
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -11,6 +12,8 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.criconnect.HelperClasses.Constants.getTeamData
+import com.example.criconnect.HelperClasses.Constants.storeTeamDataInSharedPreferences
 import com.example.criconnect.HelperClasses.drawableToBase64
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.R
@@ -29,31 +32,43 @@ class TeamRegistrationActivity : AppCompatActivity() {
     private var selectedImagePath: String? = null
     private var selectedImageDrawable: Drawable? = null
     val dataViewModel : TeamViewModel by viewModel()
+    var team : TeamModel?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityTeamRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val intentFrom = intent?.getStringExtra("intentFrom")
-
-        if(intentFrom.equals("FROM_EDIT")){
-            binding.teamRegTitleId.text="Edit Team"
+        team = getTeamData(this@TeamRegistrationActivity)
+        if(team!=null){
+            binding.teamRegTitleId.text = "Edit Team"
+            binding.teamNameET.setText(team?.teamName)
+            binding.captainNameET.setText(team?.captainName)
+            binding.teamCityET.setText(team?.city)
+            binding.homeGroundET.setText(team?.homeGround)
+            if(team?.teamLogo!=null){
+                Glide.with(this@TeamRegistrationActivity).load(team?.teamLogo).into(binding.profileImg)
+            }
         }
-//        else{
-//
-//        }
+
+
 
         binding.saveButton.setOnClickListener {
-            val base64Image = drawableToBase64(selectedImageDrawable)
+//            val base64Image = drawableToBase64(selectedImageDrawable)
             val team = TeamModel(
                 teamName = binding.teamNameET.text.toString(),
                 captainName = binding.captainNameET.text.toString(),
                 city = binding.teamCityET.text.toString(),
                 homeGround = binding.homeGroundET.text.toString()
             )
+            val dialog = ProgressDialog.show(
+                this@TeamRegistrationActivity, "",
+                "Saving Team Data, Please Wait... ", true
+            )
             teamViewModel.saveTeam(team,selectedImageDrawable){
                 if(it){
+                    storeTeamDataInSharedPreferences(this@TeamRegistrationActivity,team)
+                    dialog.dismiss()
                     Toast.makeText(this@TeamRegistrationActivity, "Team has been created!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
@@ -66,6 +81,10 @@ class TeamRegistrationActivity : AppCompatActivity() {
 
         binding.changeprofile.setOnClickListener {
             openGallery()
+        }
+
+        binding.skipButton.setOnClickListener {
+            finish()
         }
     }
 

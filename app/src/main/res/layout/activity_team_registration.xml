@@ -1,6 +1,4 @@
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,129 +6,146 @@
     android:orientation="vertical"
     tools:context=".Activities.TeamRegistrationActivity">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
-        <LinearLayout
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
-            android:padding="20dp"
-            android:background="@drawable/lavender_order"
-            android:layout_marginBottom="80dp">
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="@dimen/_25sdp">
 
-            <TextView
-                android:id="@+id/team_reg_title_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Team Registration"
-                android:textSize="@dimen/_25sdp"
-                android:textAlignment="center"
-                android:textColor="@color/lavender"/>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginVertical="@dimen/_10sdp">
+                android:layout_gravity="center_horizontal"
+                 android:background="@drawable/lavender_order"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profileImg"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/circlelogos"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="3dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/changeprofile"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:backgroundTint="@color/white"
-                    android:clickable="true"
-                    app:fabSize="mini"
-                    app:layout_constraintBottom_toBottomOf="@+id/profileImg"
-                    app:layout_constraintEnd_toEndOf="@+id/profileImg"
-                    app:srcCompat="@drawable/ic_photo_camera_black_48dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <!--            Tournament Name  -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/team_name_ET"
+                <TextView
+                    android:id="@+id/team_reg_title_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Team Name*"
+                    android:text="Team Registration"
+                    android:textAlignment="center"
+                    android:textColor="@color/lavender"
+                    android:textSize="@dimen/_25sdp" />
 
-                    android:inputType="textPersonName"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!--            Organizer name -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
-
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Captian Name"
-                    android:inputType="text"
-                    android:id="@+id/captain_name_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="@dimen/_10sdp">
 
-            <!--            City name-->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImg"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/circlelogos"
+                        app:civ_border_color="#FFFFFF"
+                        app:civ_border_width="3dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/changeprofile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:backgroundTint="@color/white"
+                        android:clickable="true"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="@+id/profileImg"
+                        app:layout_constraintEnd_toEndOf="@+id/profileImg"
+                        app:srcCompat="@drawable/ic_photo_camera_black_48dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <!--            Tournament Name  -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="City"
-                    android:inputType="text"
-                    android:id="@+id/team_city_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent">
 
-            <!--            Ground Name-->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
-                <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/team_name_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Team Name*"
+
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Organizer name -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Home Ground"
-                    android:inputType="text"
-                    android:id="@+id/homeGround_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Save"
-                android:id="@+id/saveButton"
-                android:textSize="18sp"
-                android:layout_marginTop="20dp"
-                />
-        </LinearLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/captain_name_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Captian Name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.cardview.widget.CardView>
+                <!--            City name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/team_city_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="City"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Ground Name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/homeGround_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Home Ground"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Save"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/skipButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Skip for Now"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

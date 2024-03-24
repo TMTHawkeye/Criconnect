@@ -1,6 +1,7 @@
 package com.example.criconnect.Activities
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -53,10 +54,17 @@ class PlayerProfileActivity : AppCompatActivity() {
                     batsmanhand = batsmanHandText,
                     details = binding.playerDetails.text.toString()
                 )
+                val dialog = ProgressDialog.show(
+                    this@PlayerProfileActivity, "",
+                    "Saving Player Data, Please Wait... ", true
+                )
                 teamViewModel.savePlayer(player,selectedImageDrawable) { success ->
                     val message = if (success) "Player has been added to team!" else "Problem registering player, Try again!"
                     Toast.makeText(this@PlayerProfileActivity, message, Toast.LENGTH_SHORT).show()
-                    if (success) finish()
+                    if (success) {
+                        dialog.dismiss()
+                        finish()
+                    }
                 }
             }
         }

@@ -1,18 +1,19 @@
 package com.example.criconnect
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -22,36 +23,45 @@ import com.example.criconnect.Activities.PlayerProfileActivity
 import com.example.criconnect.Activities.TeamRegistrationActivity
 import com.example.criconnect.Activities.TournamentRegistrationActivity
 import com.example.criconnect.Activities.UserProfileActivity
+import com.example.criconnect.Fragments.FAQFragment
 import com.example.criconnect.Fragments.HomeFragment
 import com.example.criconnect.Fragments.SettingsFragment
 import com.example.criconnect.Fragments.TeamManagementFragment
 import com.example.criconnect.Fragments.TeamStatisticsFragment
+import com.example.criconnect.HelperClasses.Constants
+import com.example.criconnect.HelperClasses.Constants.getTeamData
+import com.example.criconnect.HelperClasses.Constants.storeTeamDataInSharedPreferences
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
-import com.example.criconnect.ViewModels.UserViewModel
 import com.example.criconnect.databinding.ActivityMainBinding
 import com.example.criconnect.databinding.BottomsheetlayoutBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import io.paperdb.Paper
-import kotlinx.coroutines.CoroutineScope
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     lateinit var binding: ActivityMainBinding
     private var authProfile: FirebaseAuth? = null
-      val teamViewModel:TeamViewModel by viewModel()
-    var team:TeamModel?=null
+    val teamViewModel: TeamViewModel by viewModel()
+    var team: TeamModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (team == null) {
+            val dialog = ProgressDialog.show(
+                this@MainActivity, "",
+                "Fetching Team Data, Please Wait... ", true
+            )
+            getRegisteredTeamDetails(dialog)
+        }
 
 
 //        CoroutineScope(Dispatchers.Main).launch {
@@ -101,6 +111,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    private fun getRegisteredTeamDetails(dialog: ProgressDialog) {
+        teamViewModel.getTeamData() { teamData, isAvailable ->
+            if (isAvailable) {
+                dialog.dismiss()
+                if (teamData != null) {
+                    storeTeamDataInSharedPreferences(this@MainActivity,teamData)
+                }
+            }
+            else{
+                val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
+                Handler().postDelayed({
+                    dialog.dismiss()
+                    startActivity(intent)
+                }, 2000)
+            }
+        }
+    }
     private fun showBottomDialog() {
         val dialogBinding = BottomsheetlayoutBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
@@ -112,15 +139,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
-        if(team!=null){
-            dialogBinding.layoutVideo.visibility=View.GONE
+        if (team != null) {
+            dialogBinding.layoutVideo.visibility = View.GONE
         }
 
         dialogBinding.layoutVideo.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
-                .putExtra("intentFrom","FROM_REGISTER")
-
             startActivity(intent)
         }
         dialogBinding.layoutShorts.setOnClickListener {
@@ -131,8 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialogBinding.layoutLive.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
-                .putExtra("intentFrom","FROM_EDIT")
-            startActivity(intent)
+             startActivity(intent)
         }
         dialogBinding.cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -174,9 +198,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             intents.putExtra("password", passwordUsers)
             startActivity(intents)
         } else if (itemId == R.id.nav_share) {
+            shareApplication()
 //            replaceFragment(shareFragment())
         } else if (itemId == R.id.nav_faq) {
-//            replaceFragment(faqFragment())
+            replaceFragment(FAQFragment())
         } else if (itemId == R.id.nav_rateus) {
 //            showRateDialog()
         } else if (itemId == R.id.nav_logout) {
@@ -217,6 +242,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 false
             ) // Default value is false if the key is not found
         }
+    }
+
+    private fun shareApplication() {
+        val appPackageName = packageName
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            "https://play.google.com/store/apps/details?id=$appPackageName"
+        )
+        sendIntent.type = "text/plain"
+        startActivity(Intent.createChooser(sendIntent, "Share via"))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        team = getTeamData(this@MainActivity)
     }
 
 
