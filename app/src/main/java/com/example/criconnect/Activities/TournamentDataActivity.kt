@@ -1,5 +1,6 @@
 package com.example.criconnect.Activities
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -9,22 +10,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.criconnect.Adapters.MyAdapter
 import com.example.criconnect.ModelClasses.DataClass
 import com.example.criconnect.ModelClasses.TournamentData
-import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityTournamentDataBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class TournamentDataActivity : AppCompatActivity() {
-    lateinit var binding : ActivityTournamentDataBinding
-    val teamViewModel : TeamViewModel by viewModel()
+    lateinit var binding: ActivityTournamentDataBinding
+    val teamViewModel: TeamViewModel by viewModel()
 
     var dataList: List<TournamentData>? = null
     var adapter: MyAdapter? = null
     var androidData: DataClass? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityTournamentDataBinding.inflate(layoutInflater)
+        binding = ActivityTournamentDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.search.clearFocus()
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -37,9 +37,11 @@ class TournamentDataActivity : AppCompatActivity() {
                 return true
             }
         })
-
-        getTournamentsFromDatabase()
-
+        val dialog = ProgressDialog.show(
+            this@TournamentDataActivity, "",
+            "Saving Player Data, Please Wait... ", true
+        )
+        getTournamentsFromDatabase(dialog)
 
 
 //        androidData = DataClass("Team XI", R.string.camera, "RaceCourse", R.drawable.imageupdated10)
@@ -69,14 +71,16 @@ class TournamentDataActivity : AppCompatActivity() {
 
     }
 
-    fun getTournamentsFromDatabase(){
-        teamViewModel.getTournament {tournamentList->
+    fun getTournamentsFromDatabase(dialog: ProgressDialog) {
+        teamViewModel.getTournament { tournamentList ->
             Log.d("TAGlist", "getTournamentsFromDatabase: $tournamentList")
-            dataList=tournamentList
-            setAdapter(tournamentList)
+            dataList = tournamentList
+            if (tournamentList?.size != 0) {
+                dialog.dismiss()
+                setAdapter(tournamentList)
+            }
         }
     }
-
 
 
     fun setAdapter(tournamentList: List<TournamentData>?) {

@@ -50,6 +50,7 @@
             <ImageView
                 android:id="@+id/tournamentImageId"
                 android:layout_width="match_parent"
+                android:scaleType="centerCrop"
                 android:layout_height="@dimen/_150sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

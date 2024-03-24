@@ -225,7 +225,11 @@ class TeamRepository(val context: Context) {
     }
 
 
-    fun addTournamentToFirebase(tournament: TournamentData, callback: (Boolean) -> Unit) {
+    fun addTournamentToFirebase(
+        tournament: TournamentData,
+        selectedDrawable: Drawable?,
+        callback: (Boolean) -> Unit
+    ) {
         databaseReference = firebaseDatabase?.getReference("TournamentManagement");
 
         // Generate a unique ID for the tournament
@@ -234,25 +238,46 @@ class TeamRepository(val context: Context) {
         tournamentId?.let { id ->
             tournament.tournamentId = id
 
-            val tournamentData = hashMapOf(
-                "tournamentId" to id,
-                "tournamentName" to tournament.tournamentName,
-                "tournamentLocation" to tournament.tournamentLocation,
-                "tournamentEntryFee" to tournament.tournamentEntryFee,
-                "tournamentWinningPrize" to tournament.tournamentWinningPrize,
-                "tournamentLogo" to tournament.tournamentLogo
-            )
+            // Team already exists, update its data
+            val drawable = selectedDrawable
+            val bitmap = (drawable as BitmapDrawable).bitmap
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val data = byteArrayOutputStream.toByteArray()
 
-            // Save tournament data under the generated unique ID
-            databaseReference?.child(id)?.setValue(tournamentData)
-                ?.addOnSuccessListener {
-                    callback.invoke(true) // Indicate success
-                }
-                ?.addOnFailureListener {
+            // Upload byte array to Firebase Storage
+            val storage = Firebase.storage
+            val storageReference = storage.reference
+            val fileName = "${id}.png" // Generate unique file name
+            val logoRef = storageReference.child("tournamentLogos/$fileName")
+
+            val uploadTask = logoRef.putBytes(data)
+            uploadTask.addOnSuccessListener { taskSnapshot ->
+                // Get the download URL of the uploaded logo
+                taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                    val downloadUrl = uri.toString()
+
+                    val tournamentData = hashMapOf(
+                        "tournamentId" to id,
+                        "tournamentName" to tournament.tournamentName,
+                        "tournamentLocation" to tournament.tournamentLocation,
+                        "tournamentEntryFee" to tournament.tournamentEntryFee,
+                        "tournamentWinningPrize" to tournament.tournamentWinningPrize,
+                        "tournamentLogo" to downloadUrl
+                    )
+
+                    // Save tournament data under the generated unique ID
+                    databaseReference?.child(id)?.setValue(tournamentData)
+                        ?.addOnSuccessListener {
+                            callback.invoke(true) // Indicate success
+                        }
+                        ?.addOnFailureListener {
+                            callback.invoke(false) // Indicate error occurred
+                        }
+                } ?: run {
                     callback.invoke(false) // Indicate error occurred
                 }
-        } ?: run {
-            callback.invoke(false) // Indicate error occurred
+            }
         }
     }
 
@@ -267,7 +292,7 @@ class TeamRepository(val context: Context) {
 
         currentUser?.let { user ->
             val currentUserUUID = user.uid
-            val userTeamReference = databaseReference.child(currentUserUUID).child("players")
+            val userTeamReference = databaseReference.child(currentUserUUID).child("playerData")
             userTeamReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val playerList = dataSnapshot.getValue(object :
@@ -288,7 +313,10 @@ class TeamRepository(val context: Context) {
                             userTeamReference.setValue(newPlayerList)
                                 .addOnSuccessListener {
                                     // Update team in tournaments
-                                    updateTeamInTournaments(currentUserUUID, newPlayerList) { success ->
+                                    updateTeamInTournaments(
+                                        currentUserUUID,
+                                        newPlayerList
+                                    ) { success ->
                                         if (success) {
                                             callback.invoke(true)
                                         } else {
@@ -411,13 +439,13 @@ class TeamRepository(val context: Context) {
                             tournamentData["tournamentEntryFee"] as? String ?: ""
                         val tournamentWinningPrize =
                             tournamentData["tournamentWinningPrize"] as? String ?: ""
-                        val tournamentLogoBase64 = tournamentData["tournamentLogo"] as? String
+                        val tournamentLogo= tournamentData["tournamentLogo"] as? String
 
                         // Convert base64 encoded team logo to Drawable
 
                         val tournament = TournamentData(
                             tournamentId = tournamentId,
-                            tournamentLogo = tournamentLogoBase64,
+                            tournamentLogo = tournamentLogo,
                             tournamentName = tournamentName,
                             tournamentLocation = tournamentLocation,
                             tournamentEntryFee = tournamentEntryFee,
@@ -478,7 +506,7 @@ class TeamRepository(val context: Context) {
         val currentUser = getLoggedInUser()
         currentUser?.let { user ->
             val currentUserUUID = user.uid
-            val userTeamReference = databaseReference?.child(currentUserUUID)?.child("players")
+            val userTeamReference = databaseReference?.child(currentUserUUID)?.child("playerData")
             userTeamReference?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val playerList = dataSnapshot.getValue(object :
@@ -552,7 +580,7 @@ class TeamRepository(val context: Context) {
 
         currentUser?.let { user ->
             val currentUserUUID = user.uid
-            val userTeamReference = databaseReference.child(currentUserUUID).child("players")
+            val userTeamReference = databaseReference.child(currentUserUUID).child("playerData")
 
             userTeamReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -622,7 +650,8 @@ class TeamRepository(val context: Context) {
 
                             // Update only the player list
                             existingTeamData?.let { team ->
-                                team.playerData = playerList
+                                team.playerData =
+                                    playerList // Assuming "players" is the correct field name
                                 // Update team in this tournament
                                 teamSnapshot.ref.setValue(team)
                                     .addOnSuccessListener {

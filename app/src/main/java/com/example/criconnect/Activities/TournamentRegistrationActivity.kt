@@ -33,16 +33,14 @@ class TournamentRegistrationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.saveButton.setOnClickListener {
-            val base64toDrawable = drawableToBase64(selectedImageDrawable)?:""
+//            val base64toDrawable = drawableToBase64(selectedImageDrawable)?:""
             val tournament = TournamentData(
-                null,
-                base64toDrawable,
-                binding.tournNameET.text.toString(),
-                binding.groundAddressET.text.toString(),
-                binding.entryFeeET.text.toString(),
-                binding.winnngET.text.toString()
+                tournamentName = binding.tournNameET.text.toString(),
+                tournamentLocation = binding.groundAddressET.text.toString(),
+                tournamentEntryFee = binding.entryFeeET.text.toString(),
+                tournamentWinningPrize = binding.winnngET.text.toString()
             )
-            teamViewModel.saveTournament(tournament){
+            teamViewModel.saveTournament(tournament,selectedImageDrawable){
                 if(it){
                     Toast.makeText(this@TournamentRegistrationActivity, "Tournament has been registered!", Toast.LENGTH_SHORT).show()
                     finish()

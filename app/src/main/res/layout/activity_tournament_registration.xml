@@ -1,5 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,107 +6,114 @@
     android:orientation="vertical"
     tools:context=".Activities.TeamRegistrationActivity">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
-        <LinearLayout
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
-            android:padding="20dp"
-            android:background="@drawable/lavender_order"
-            android:layout_marginBottom="80dp">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_25sdp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tournament Registration"
-                android:textSize="30sp"
-                android:textAlignment="center"
-                android:textColor="@color/lavender"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/uploadimg"
-                android:id="@+id/tournametImage"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"/>
-
-            <!--            Tournament Name  -->
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                 android:layout_gravity="center_horizontal"
+                 android:background="@drawable/lavender_order"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tourn_name_ET"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Tournament Name*"
+                    android:text="Tournament Registration"
+                    android:textAlignment="center"
+                    android:textColor="@color/lavender"
+                    android:textSize="30sp" />
 
-                    android:inputType="textPersonName"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!--            Organizer name -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
-
-                <com.google.android.material.textfield.TextInputEditText
+                <ImageView
+                    android:id="@+id/tournametImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Tournament Ground Address*"
-                    android:inputType="text"
-                    android:id="@+id/ground_address_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/uploadimg" />
 
-            <!--            City name-->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
-
-                <com.google.android.material.textfield.TextInputEditText
+                <!--            Tournament Name  -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Entry Fee"
-                    android:inputType="number"
-                    android:id="@+id/entryFee_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent">
 
-            <!--            Ground Name-->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">>
-                <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tourn_name_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tournament Name*"
+
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Organizer name -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Winning Prize"
-                    android:inputType="number"
-                    android:id="@+id/winnng_ET"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Save"
-                android:id="@+id/saveButton"
-                android:textSize="18sp"
-                android:layout_marginTop="20dp"
-                />
-        </LinearLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ground_address_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tournament Ground Address*"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.cardview.widget.CardView>
+                <!--            City name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/entryFee_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Entry Fee"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Ground Name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/winnng_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Winning Prize"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Save"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

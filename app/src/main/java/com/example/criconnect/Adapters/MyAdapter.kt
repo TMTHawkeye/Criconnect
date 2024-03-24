@@ -10,6 +10,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.criconnect.Activities.DetailActivity
 import com.example.criconnect.Activities.TournamentDetailActivity
 import com.example.criconnect.HelperClasses.base64ToDrawable
@@ -38,17 +42,35 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val base64toDrawable = base64ToDrawable( dataList?.get(position)?.tournamentLogo)
-        Glide.with(ctxt).load(base64toDrawable).error(ctxt.getDrawable(R.drawable.circlelogo)).into(holder.binding.tournamentImage)
+//        val base64toDrawable = base64ToDrawable( dataList?.get(position)?.tournamentLogo)
         holder.binding.recTitle.setText(dataList!![position].tournamentName)
         holder.binding.recLocation.setText(dataList!![position].tournamentLocation)
+        loadImage(position,holder)
 
         Log.d("TAGTournamentid", "onCreate: ${dataList?.get(position)?.tournamentId}")
 
         holder.binding.recCard.setOnClickListener {
-            val intent = Intent(ctxt, TournamentDetailActivity::class.java).putExtra("tournamentId",dataList?.get(position)?.tournamentId)
+            val intent = Intent(ctxt, TournamentDetailActivity::class.java)
+                .putExtra("selectedTournament",dataList?.get(position))
             ctxt.startActivity(intent)
         }
+    }
+
+    fun loadImage(position: Int, holder: MyViewHolder){
+        val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+        val options: RequestOptions = RequestOptions()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .placeholder(R.drawable.circlelogo)
+            .error(R.drawable.circlelogo)
+
+        Glide.with(ctxt)
+            .load(dataList?.get(position)?.tournamentLogo)
+            .transition(DrawableTransitionOptions.withCrossFade(factory))
+            .apply(options)
+            .into(holder.binding.tournamentImage)
+
     }
 
     override fun getItemCount(): Int {

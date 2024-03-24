@@ -53,6 +53,8 @@
     <string name="description">"Description : "</string>
     <string name="hand">"Hand : "</string>
     <string name="delete">Delete</string>
+    <string name="captainName">"Captain Name : "</string>
+    <string name="homeGround">Home Ground :</string>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>

@@ -22,7 +22,7 @@ import com.example.criconnect.databinding.PlayerrecyclerItemBinding
 class PlayerAdapter(
     val ctxt: Context,
     val dataListt: List<PlayerData>?,
-    val listner: PlayerListner
+    val listner: PlayerListner?
 ) :
     RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 
@@ -57,9 +57,13 @@ class PlayerAdapter(
         loadImage(position, holder)
 
 
-        holder.binding.deleteItem.setOnClickListener {
-            deletePlayer(position)
+        if(listner!=null) {
+            holder.binding.deleteItem.visibility=View.GONE
         }
+            holder.binding.deleteItem.setOnClickListener {
+                deletePlayer(position)
+            }
+
 
         holder.binding.recCard.setOnClickListener(View.OnClickListener {
             val intent = Intent(context, PlayerDetailsActivity::class.java)
@@ -70,7 +74,7 @@ class PlayerAdapter(
 
     private fun deletePlayer(position: Int) {
         dataList?.get(position)?.let { playerToDelete ->
-            listner.onDeletePlayer(playerToDelete)
+            listner?.onDeletePlayer(playerToDelete)
         }
     }
 

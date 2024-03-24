@@ -7,8 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.R
 import com.example.criconnect.databinding.ImageSliderLayoutItemBinding
 import com.smarteist.autoimageslider.SliderViewAdapter
 
@@ -49,11 +54,7 @@ class SliderAdapter(context: Context) :
         val sliderItem: TournamentData = mSliderItems[position]
         viewHolder.binding.tournamentNameId.text = sliderItem.tournamentName
 
-        val logo= base64ToDrawable(sliderItem.tournamentLogo)
-        Glide.with(viewHolder.itemView)
-            .load(logo)
-            .fitCenter()
-            .into(viewHolder.binding.ivAutoImageSlider)
+        loadImage(position,viewHolder)
 
         viewHolder.itemView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -61,6 +62,23 @@ class SliderAdapter(context: Context) :
                     .show()
             }
         })
+    }
+
+    fun loadImage(position: Int, holder: SliderAdapterVH){
+        val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+        val options: RequestOptions = RequestOptions()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            .placeholder(R.drawable.circlelogo)
+            .error(R.drawable.circlelogo)
+
+        Glide.with(context)
+            .load(mSliderItems?.get(position)?.tournamentLogo)
+            .transition(DrawableTransitionOptions.withCrossFade(factory))
+            .apply(options)
+            .into(holder.binding.ivAutoImageSlider)
+
     }
 
     override fun getCount(): Int {

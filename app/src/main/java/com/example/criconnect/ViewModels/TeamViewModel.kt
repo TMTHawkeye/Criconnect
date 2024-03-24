@@ -14,8 +14,8 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.addTeamToFirebase(team,selectedDrawable,callback)
     }
 
-    fun saveTournament(tournament: TournamentData,callback:(Boolean)->Unit) {
-        repository.addTournamentToFirebase(tournament,callback)
+    fun saveTournament(tournament: TournamentData,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
+        repository.addTournamentToFirebase(tournament,selectedDrawable,callback)
     }
 
     fun registerTeamInTournament(tournamentId: String?,callback: (Boolean) -> Unit) {
