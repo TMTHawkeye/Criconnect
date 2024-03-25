@@ -6,12 +6,14 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.criconnect.Adapters.MatchesAdapter
 import com.example.criconnect.ModelClasses.TeamModel
+import com.example.criconnect.ModelClasses.TournamentData
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.Serializable
 import java.util.UUID
 
-class OrganizeMatchesActivity : AppCompatActivity() {
+class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityOrganizeMatchesBinding
     val dataViewModel: TeamViewModel by viewModel()
 
@@ -20,32 +22,34 @@ class OrganizeMatchesActivity : AppCompatActivity() {
         binding = ActivityOrganizeMatchesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val tournamentId = intent?.getStringExtra("tournamentId")
-        Log.d("TAGTournamentid", "onCreate: $tournamentId")
+        val tournamentData = intent?.getSerializableExtra("selectedTournament") as TournamentData
+        Log.d("TAGTournamentid", "onCreate: ${tournamentData.tournamentId}")
 
-        dataViewModel.getRegisteredTeamsInTournament(tournamentId) { registeredTeams ->
-            val matches = generateMatches(registeredTeams)
-            storeMatchesInDatabase(tournamentId, matches)
-        }
-    }
-
-    fun storeMatchesInDatabase(tournamentId: String?, matches: List<Pair<TeamModel, TeamModel>>) {
-        dataViewModel.storeMatchesinFirebase(tournamentId, matches){
-            if(it){
-                setAdapter(matches)
+        if (tournamentData != null) {
+            binding.titleTournament.text = tournamentData.tournamentName
+            dataViewModel.getRegisteredTeamsInTournament(tournamentData.tournamentId) { registeredTeams ->
+                val matches = generateMatches(registeredTeams)
+                storeMatchesInDatabase(tournamentData.tournamentId, matches)
             }
         }
     }
 
-    fun setAdapter(matches: List<Pair<TeamModel, TeamModel>>){
-        binding.matchesRV.layoutManager=LinearLayoutManager(this@OrganizeMatchesActivity)
-        binding.matchesRV.adapter=MatchesAdapter(this@OrganizeMatchesActivity,matches)
+    fun storeMatchesInDatabase(tournamentId: String?, matches: List<Pair<TeamModel, TeamModel>>) {
+        dataViewModel.storeMatchesinFirebase(tournamentId, matches) {
+            setAdapter(matches)
+        }
+    }
+
+    fun setAdapter(matches: List<Pair<TeamModel, TeamModel>>) {
+        binding.matchesRV.layoutManager = LinearLayoutManager(this@OrganizeMatchesActivity)
+        binding.matchesRV.adapter = MatchesAdapter(this@OrganizeMatchesActivity, matches)
     }
 
     private fun generateMatches(teamsList: List<TeamModel>?): List<Pair<TeamModel, TeamModel>> {
         val matches = mutableListOf<Pair<TeamModel, TeamModel>>()
 
         if (teamsList != null && teamsList.size >= 2) {
+
             when (teamsList.size) {
                 3 -> {
                     matches.add(Pair(teamsList[0], teamsList[1]))

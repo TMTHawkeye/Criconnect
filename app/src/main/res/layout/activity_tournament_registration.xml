@@ -24,8 +24,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                 android:layout_gravity="center_horizontal"
-                 android:background="@drawable/lavender_order"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/lavender_order"
                 android:orientation="vertical"
                 android:padding="20dp">
 
@@ -56,6 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tournament Name*"
+                        android:required="true"
 
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -71,6 +72,8 @@
                         android:id="@+id/ground_address_ET"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:required="true"
+
                         android:hint="Tournament Ground Address*"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -87,6 +90,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Entry Fee"
+                        android:required="true"
+
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,6 +107,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Winning Prize"
+                        android:required="true"
+
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp">>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/startdate_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Start Date"
+                        android:required="true"
+
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 

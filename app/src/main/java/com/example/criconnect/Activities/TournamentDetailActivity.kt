@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,10 +22,10 @@ import com.example.criconnect.databinding.ActivityTournamentDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.Serializable
 
-class TournamentDetailActivity : AppCompatActivity(),Serializable {
+class TournamentDetailActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityTournamentDetailBinding
     val dataViewModel: TeamViewModel by viewModel()
-    var selectedTournament : TournamentData?=null
+    var selectedTournament: TournamentData? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTournamentDetailBinding.inflate(layoutInflater)
@@ -33,12 +34,23 @@ class TournamentDetailActivity : AppCompatActivity(),Serializable {
         selectedTournament = intent?.getSerializableExtra("selectedTournament") as TournamentData
         Log.d("TAGTournamentid", "onCreate: ${selectedTournament?.tournamentId}")
 
-        if(selectedTournament!=null) {
+        if (selectedTournament != null) {
             setTournamentAttributes()
             getRegisteredTeamsInTournament()
+            if(selectedTournament?.teamList?.size!!>12){
+                binding.btnOrganizeMatches.visibility=View.GONE
+                binding.registerTeamId.visibility=View.GONE
+            }
+        }
+        else{
+            Toast.makeText(this@TournamentDetailActivity, "No data Found", Toast.LENGTH_SHORT).show()
+            binding.teamsRV.visibility=View.GONE
+            binding.btnOrganizeMatches.visibility=View.GONE
+            binding.registerTeamId.visibility=View.GONE
         }
 
         binding.registerTeamId.setOnClickListener {
+
             registerTeam()
         }
 
@@ -59,7 +71,7 @@ class TournamentDetailActivity : AppCompatActivity(),Serializable {
         binding.winningId.text = selectedTournament?.tournamentWinningPrize
     }
 
-    fun loadImage(){
+    fun loadImage() {
         val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
         val options: RequestOptions = RequestOptions()
@@ -79,43 +91,57 @@ class TournamentDetailActivity : AppCompatActivity(),Serializable {
     private fun registerTeam() {
         binding.progressBar.visibility = View.VISIBLE
         dataViewModel.registerTeamInTournament(selectedTournament?.tournamentId) {
-            dataViewModel.getRegisteredTeamsInTournament(selectedTournament?.tournamentId) {
-                binding.progressBar.visibility = View.GONE
-                binding.registerTeamId.visibility = View.VISIBLE
-                if (it?.size != 0) {
-                    binding.btnOrganizeMatches.visibility = View.VISIBLE
-                    setAdapter(it)
-                } else {
-                    binding.btnOrganizeMatches.visibility = View.GONE
-                    binding.teamsRV.visibility = View.GONE
+            if (it) {
+                dataViewModel.getRegisteredTeamsInTournament(selectedTournament?.tournamentId) { registeredList ->
+                    Log.d("TAGregisteredListSize", "registerTeam: ${registeredList?.size}")
+                    binding.progressBar.visibility = View.GONE
+                    binding.registerTeamId.visibility = View.GONE
+//                    if (registeredList?.size!! > 1) {
+                    if (registeredList?.size!! >= 3) {
+                        binding.btnOrganizeMatches.visibility = View.VISIBLE
+                    } else {
+                        binding.btnOrganizeMatches.visibility = View.GONE
+                    }
+                    setAdapter(registeredList)
+//                    } else {
+//                        binding.btnOrganizeMatches.visibility = View.GONE
+//                        binding.teamsRV.visibility = View.GONE
+//                    }
                 }
+            } else {
+                Toast.makeText(
+                    this@TournamentDetailActivity,
+                    "Unable to register, Tryagain!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
     private fun getRegisteredTeamsInTournament() {
         val user = dataViewModel.getLoggedInUser()
-        dataViewModel.getRegisteredTeamsInTournament(selectedTournament?.tournamentId) {listTeam->
-             if (listTeam?.size != 0) {
-                 listTeam?.forEach {
-                    if(it.teamId.equals(user?.uid) || listTeam.size>12){
-                        binding.registerTeamId.visibility=View.GONE
-                     }
+        dataViewModel.getRegisteredTeamsInTournament(selectedTournament?.tournamentId) { listTeam ->
+            if (listTeam?.size != 0) {
+                listTeam?.forEach {
+                    if (it.teamId.equals(user?.uid) || listTeam.size > 12) {
+                        binding.registerTeamId.visibility = View.GONE
+                    }
                 }
-                 if(listTeam?.size!! < 3 || listTeam?.size!! > 12){
-                     binding.btnOrganizeMatches.visibility=View.GONE
-                 }
+                if (listTeam?.size!! < 3 || listTeam?.size!! > 12) {
+                    binding.btnOrganizeMatches.visibility = View.GONE
+                }
                 setAdapter(listTeam)
 
             } else {
-                binding.btnOrganizeMatches.visibility=View.GONE
-                binding.teamsRV.visibility=View.GONE
-                binding.registerTeamId.visibility=View.VISIBLE
+                binding.btnOrganizeMatches.visibility = View.GONE
+                binding.teamsRV.visibility = View.GONE
+                binding.registerTeamId.visibility = View.VISIBLE
             }
         }
     }
 
     fun setAdapter(teamsList: List<TeamModel>?) {
+        binding.teamsRV.visibility=View.VISIBLE
         binding.teamsRV.layoutManager = LinearLayoutManager(this@TournamentDetailActivity)
         binding.teamsRV.adapter = RegisteredTeamsAdapter(this@TournamentDetailActivity, teamsList)
     }

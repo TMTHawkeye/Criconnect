@@ -40,7 +40,7 @@ class TeamRepository(val context: Context) {
 
     }
 
-    fun storeMatchesInDatabase(
+  /*  fun storeMatchesInDatabase(
         tournamentId: String?,
         matches: List<Pair<TeamModel, TeamModel>>,
         callback: (Boolean) -> Unit
@@ -53,125 +53,164 @@ class TeamRepository(val context: Context) {
                 callback(false)
             }
         }
-    }
+    }*/
 
-  /*  fun addTeamToFirebase(
-        team: TeamModel,
-        selectedDrawable: Drawable?,
+    fun storeMatchesInDatabase(
+        tournamentId: String?,
+        matches: List<Pair<TeamModel, TeamModel>>,
         callback: (Boolean) -> Unit
     ) {
-        databaseReference = firebaseDatabase?.getReference("TeamManagement")
+        // Check if the tournamentId is provided and not empty
+        if (tournamentId.isNullOrEmpty()) {
+            callback(false)
+            return
+        }
 
-        val currentUser = getLoggedInUser()
-        currentUser?.let { user ->
-            val currentUserUUID = user.uid
-            val userTeamReference = databaseReference?.child(currentUserUUID)
-            userTeamReference?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // Team already exists, update its data
-                        val drawable = selectedDrawable
-                        val bitmap = (drawable as BitmapDrawable).bitmap
-                        val byteArrayOutputStream = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-                        val data = byteArrayOutputStream.toByteArray()
-
-                        // Upload byte array to Firebase Storage
-                        val storage = Firebase.storage
-                        val storageReference = storage.reference
-                        val fileName = "${currentUserUUID}.png" // Generate unique file name
-                        val logoRef = storageReference.child("teamLogos/$fileName")
-
-                        val uploadTask = logoRef.putBytes(data)
-                        uploadTask.addOnSuccessListener { taskSnapshot ->
-                            // Get the download URL of the uploaded logo
-                            taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
-                                val downloadUrl = uri.toString()
-
-                                val teamData = hashMapOf(
-                                    "teamId" to currentUserUUID,
-                                    "teamName" to team.teamName,
-                                    "captainName" to team.captainName,
-                                    "city" to team.city,
-                                    "homeGround" to team.homeGround,
-                                    "teamLogo" to downloadUrl // Save the URL of the logo
-                                )
-
-                                // Update team data in Firebase
-                                userTeamReference.updateChildren(teamData as Map<String, Any>)
-                                    .addOnSuccessListener {
-                                        callback.invoke(true) // Indicate success
-                                    }
-                                    .addOnFailureListener {
-                                        callback.invoke(false) // Indicate error occurred
-                                    }
-                            }.addOnFailureListener { exception ->
-                                // Handle any errors retrieving the download URL
-                                Log.e("FirebaseStorage", "Error getting download URL", exception)
-                                callback.invoke(false) // Indicate error occurred
-                            }
-                        }.addOnFailureListener { exception ->
-                            // Handle unsuccessful logo uploads
-                            Log.e("FirebaseStorage", "Error uploading logo", exception)
-                            callback.invoke(false) // Indicate error occurred
-                        }
-                    } else {
-                        // Team does not exist, create a new entry
-                        // Convert drawable to byte array
-                        val drawable = selectedDrawable
-                        val bitmap = (drawable as BitmapDrawable).bitmap
-                        val byteArrayOutputStream = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-                        val data = byteArrayOutputStream.toByteArray()
-
-                        // Upload byte array to Firebase Storage
-                        val storage = Firebase.storage
-                        val storageReference = storage.reference
-                        val fileName = "${currentUserUUID}.png" // Generate unique file name
-                        val logoRef = storageReference.child("teamLogos/$fileName")
-
-                        val uploadTask = logoRef.putBytes(data)
-                        uploadTask.addOnSuccessListener { taskSnapshot ->
-                            // Get the download URL of the uploaded logo
-                            taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
-                                val downloadUrl = uri.toString()
-
-                                val teamData = hashMapOf(
-                                    "teamId" to currentUserUUID,
-                                    "teamName" to team.teamName,
-                                    "captainName" to team.captainName,
-                                    "city" to team.city,
-                                    "homeGround" to team.homeGround,
-                                    "teamLogo" to downloadUrl // Save the URL of the logo
-                                )
-
-                                // Save team data to Firebase
-                                userTeamReference.setValue(teamData)
-                                    .addOnSuccessListener {
-                                        callback.invoke(true) // Indicate success
-                                    }
-                                    .addOnFailureListener {
-                                        callback.invoke(false) // Indicate error occurred
-                                    }
-                            }.addOnFailureListener { exception ->
-                                // Handle any errors retrieving the download URL
-                                Log.e("FirebaseStorage", "Error getting download URL", exception)
-                                callback.invoke(false) // Indicate error occurred
-                            }
-                        }.addOnFailureListener { exception ->
-                            // Handle unsuccessful logo uploads
-                            Log.e("FirebaseStorage", "Error uploading logo", exception)
-                            callback.invoke(false) // Indicate error occurred
+        val tournamentMatchesRef = firebaseDatabase?.getReference("TournamentMatches")
+        tournamentMatchesRef?.child(tournamentId)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Check if tournamentId already exists
+                if (dataSnapshot.exists()) {
+                    // Tournament ID already exists, do not proceed with storing matches
+                    callback(false)
+                } else {
+                    // Tournament ID does not exist, proceed with storing matches
+                    val matchesRef = tournamentMatchesRef.child(tournamentId)
+                    matchesRef.setValue(matches.map { it.toList() }).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            callback(true)
+                        } else {
+                            callback(false)
                         }
                     }
                 }
+            }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    callback.invoke(false) // Indicate error occurred
-                }
-            })
-        } ?: callback.invoke(false) // If currentUser is null, callback with false
-    }*/
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Error occurred while checking tournament ID existence
+                callback(false)
+            }
+        })
+    }
+
+
+    /*  fun addTeamToFirebase(
+          team: TeamModel,
+          selectedDrawable: Drawable?,
+          callback: (Boolean) -> Unit
+      ) {
+          databaseReference = firebaseDatabase?.getReference("TeamManagement")
+
+          val currentUser = getLoggedInUser()
+          currentUser?.let { user ->
+              val currentUserUUID = user.uid
+              val userTeamReference = databaseReference?.child(currentUserUUID)
+              userTeamReference?.addListenerForSingleValueEvent(object : ValueEventListener {
+                  override fun onDataChange(dataSnapshot: DataSnapshot) {
+                      if (dataSnapshot.exists()) {
+                          // Team already exists, update its data
+                          val drawable = selectedDrawable
+                          val bitmap = (drawable as BitmapDrawable).bitmap
+                          val byteArrayOutputStream = ByteArrayOutputStream()
+                          bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                          val data = byteArrayOutputStream.toByteArray()
+
+                          // Upload byte array to Firebase Storage
+                          val storage = Firebase.storage
+                          val storageReference = storage.reference
+                          val fileName = "${currentUserUUID}.png" // Generate unique file name
+                          val logoRef = storageReference.child("teamLogos/$fileName")
+
+                          val uploadTask = logoRef.putBytes(data)
+                          uploadTask.addOnSuccessListener { taskSnapshot ->
+                              // Get the download URL of the uploaded logo
+                              taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                                  val downloadUrl = uri.toString()
+
+                                  val teamData = hashMapOf(
+                                      "teamId" to currentUserUUID,
+                                      "teamName" to team.teamName,
+                                      "captainName" to team.captainName,
+                                      "city" to team.city,
+                                      "homeGround" to team.homeGround,
+                                      "teamLogo" to downloadUrl // Save the URL of the logo
+                                  )
+
+                                  // Update team data in Firebase
+                                  userTeamReference.updateChildren(teamData as Map<String, Any>)
+                                      .addOnSuccessListener {
+                                          callback.invoke(true) // Indicate success
+                                      }
+                                      .addOnFailureListener {
+                                          callback.invoke(false) // Indicate error occurred
+                                      }
+                              }.addOnFailureListener { exception ->
+                                  // Handle any errors retrieving the download URL
+                                  Log.e("FirebaseStorage", "Error getting download URL", exception)
+                                  callback.invoke(false) // Indicate error occurred
+                              }
+                          }.addOnFailureListener { exception ->
+                              // Handle unsuccessful logo uploads
+                              Log.e("FirebaseStorage", "Error uploading logo", exception)
+                              callback.invoke(false) // Indicate error occurred
+                          }
+                      } else {
+                          // Team does not exist, create a new entry
+                          // Convert drawable to byte array
+                          val drawable = selectedDrawable
+                          val bitmap = (drawable as BitmapDrawable).bitmap
+                          val byteArrayOutputStream = ByteArrayOutputStream()
+                          bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                          val data = byteArrayOutputStream.toByteArray()
+
+                          // Upload byte array to Firebase Storage
+                          val storage = Firebase.storage
+                          val storageReference = storage.reference
+                          val fileName = "${currentUserUUID}.png" // Generate unique file name
+                          val logoRef = storageReference.child("teamLogos/$fileName")
+
+                          val uploadTask = logoRef.putBytes(data)
+                          uploadTask.addOnSuccessListener { taskSnapshot ->
+                              // Get the download URL of the uploaded logo
+                              taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                                  val downloadUrl = uri.toString()
+
+                                  val teamData = hashMapOf(
+                                      "teamId" to currentUserUUID,
+                                      "teamName" to team.teamName,
+                                      "captainName" to team.captainName,
+                                      "city" to team.city,
+                                      "homeGround" to team.homeGround,
+                                      "teamLogo" to downloadUrl // Save the URL of the logo
+                                  )
+
+                                  // Save team data to Firebase
+                                  userTeamReference.setValue(teamData)
+                                      .addOnSuccessListener {
+                                          callback.invoke(true) // Indicate success
+                                      }
+                                      .addOnFailureListener {
+                                          callback.invoke(false) // Indicate error occurred
+                                      }
+                              }.addOnFailureListener { exception ->
+                                  // Handle any errors retrieving the download URL
+                                  Log.e("FirebaseStorage", "Error getting download URL", exception)
+                                  callback.invoke(false) // Indicate error occurred
+                              }
+                          }.addOnFailureListener { exception ->
+                              // Handle unsuccessful logo uploads
+                              Log.e("FirebaseStorage", "Error uploading logo", exception)
+                              callback.invoke(false) // Indicate error occurred
+                          }
+                      }
+                  }
+
+                  override fun onCancelled(databaseError: DatabaseError) {
+                      callback.invoke(false) // Indicate error occurred
+                  }
+              })
+          } ?: callback.invoke(false) // If currentUser is null, callback with false
+      }*/
 
     private fun updateTournamentsWithTeam(
         teamId: String,
@@ -472,13 +511,13 @@ class TeamRepository(val context: Context) {
 
         tournamentRef?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val teamsList = mutableListOf<TeamModel>()
+                val teamsList = ArrayList<TeamModel>()
 
                 for (teamSnapshot in dataSnapshot.children) {
                     val teamData = teamSnapshot.getValue(TeamModel::class.java)
-                    teamData?.let {
-                        teamsList.add(it)
-                    }
+//                    teamData?.let {
+                        teamsList.add(teamData!!)
+//                    }
                 }
 
                 callback.invoke(teamsList)

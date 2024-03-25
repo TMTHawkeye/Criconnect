@@ -10,5 +10,6 @@ data class TeamModel(
     var captainName: String = "",
     var city: String = "",
     var homeGround: String = "",
+    var startDate : String="",
     var playerData : ArrayList<PlayerData>? = ArrayList()
 ):Serializable
