@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.criconnect.HelperClasses.Constants.getTeamData
+import com.example.criconnect.HelperClasses.Constants.loadImage
 import com.example.criconnect.HelperClasses.Constants.storeTeamDataInSharedPreferences
 import com.example.criconnect.HelperClasses.drawableToBase64
 import com.example.criconnect.ModelClasses.TeamModel
@@ -47,11 +48,13 @@ class TeamRegistrationActivity : AppCompatActivity() {
             binding.teamCityET.setText(team?.city)
             binding.homeGroundET.setText(team?.homeGround)
             if(team?.teamLogo!=null){
-                Glide.with(this@TeamRegistrationActivity).load(team?.teamLogo).into(binding.profileImg)
+                selectedImageDrawable=binding.profileImg.drawable
+                loadImage(this@TeamRegistrationActivity,binding.profileImg,team?.teamLogo)
+            }
+            else{
+                selectedImageDrawable=getDrawable(R.drawable.circlelogo)
             }
         }
-
-
 
         binding.saveButton.setOnClickListener {
 //            val base64Image = drawableToBase64(selectedImageDrawable)

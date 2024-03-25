@@ -57,7 +57,7 @@ class PlayerAdapter(
         loadImage(position, holder)
 
 
-        if(listner!=null) {
+        if(listner==null) {
             holder.binding.deleteItem.visibility=View.GONE
         }
             holder.binding.deleteItem.setOnClickListener {

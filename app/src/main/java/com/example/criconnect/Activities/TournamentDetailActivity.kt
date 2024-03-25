@@ -53,7 +53,8 @@ class TournamentDetailActivity : AppCompatActivity(),Serializable {
 
     private fun setTournamentAttributes() {
         loadImage()
-        binding.locationId.text = selectedTournament?.tournamentName
+        binding.titleTournament.text = selectedTournament?.tournamentName
+        binding.locationId.text = selectedTournament?.tournamentLocation
         binding.entryId.text = selectedTournament?.tournamentEntryFee
         binding.winningId.text = selectedTournament?.tournamentWinningPrize
     }

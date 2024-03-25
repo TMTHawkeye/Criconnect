@@ -29,6 +29,7 @@ import com.example.criconnect.Fragments.SettingsFragment
 import com.example.criconnect.Fragments.TeamManagementFragment
 import com.example.criconnect.Fragments.TeamStatisticsFragment
 import com.example.criconnect.HelperClasses.Constants
+import com.example.criconnect.HelperClasses.Constants.deleteTeamDataFromSharedPreferences
 import com.example.criconnect.HelperClasses.Constants.getTeamData
 import com.example.criconnect.HelperClasses.Constants.storeTeamDataInSharedPreferences
 import com.example.criconnect.ModelClasses.TeamModel
@@ -205,6 +206,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if (itemId == R.id.nav_rateus) {
 //            showRateDialog()
         } else if (itemId == R.id.nav_logout) {
+            deleteTeamDataFromSharedPreferences(this@MainActivity)
             authProfile = FirebaseAuth.getInstance()
             authProfile!!.signOut()
             Toast.makeText(this@MainActivity, "Logged Out", Toast.LENGTH_SHORT).show()

@@ -1,6 +1,7 @@
 package com.example.criconnect.Activities
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -40,12 +41,18 @@ class TournamentRegistrationActivity : AppCompatActivity() {
                 tournamentEntryFee = binding.entryFeeET.text.toString(),
                 tournamentWinningPrize = binding.winnngET.text.toString()
             )
+            val dialog = ProgressDialog.show(
+                this@TournamentRegistrationActivity, "",
+                "Saving Team Data, Please Wait... ", true
+            )
             teamViewModel.saveTournament(tournament,selectedImageDrawable){
                 if(it){
+                    dialog.dismiss()
                     Toast.makeText(this@TournamentRegistrationActivity, "Tournament has been registered!", Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 else{
+                    dialog.dismiss()
                     Toast.makeText(this@TournamentRegistrationActivity, "You have already registered the tournament!", Toast.LENGTH_SHORT).show()
                     finish()
                 }

@@ -1,6 +1,7 @@
 package com.example.criconnect.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
+import com.example.criconnect.Activities.TournamentDetailActivity
 import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.TournamentData
 import com.example.criconnect.R
@@ -58,8 +60,9 @@ class SliderAdapter(context: Context) :
 
         viewHolder.itemView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                Toast.makeText(context, "This is item in position $position", Toast.LENGTH_SHORT)
-                    .show()
+                val intent = Intent(context, TournamentDetailActivity::class.java)
+                    .putExtra("selectedTournament",mSliderItems?.get(position))
+                context.startActivity(intent)
             }
         })
     }
