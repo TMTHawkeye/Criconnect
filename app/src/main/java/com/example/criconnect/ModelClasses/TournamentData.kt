@@ -6,9 +6,9 @@ import java.io.Serializable
 data class TournamentData(
     var tournamentId : String?=null,
     var tournamentLogo : String?=null,
-    val tournamentName : String="",
-    val tournamentLocation : String="",
-    val tournamentEntryFee : String="",
-    val tournamentWinningPrize : String="",
-    val teamList : ArrayList<TeamModel>?=ArrayList()
+    val tournamentName : String?="",
+    val tournamentLocation : String?="",
+    val tournamentEntryFee : String?="",
+    val tournamentWinningPrize : String?="",
+    val teamList : ArrayList<String>?=ArrayList()
 ) : Serializable

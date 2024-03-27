@@ -22,7 +22,7 @@ class TeamManagementFragment : Fragment() , PlayerListner{
     lateinit var binding : FragmentTeamManagementBinding
     val teamViewModel : TeamViewModel by sharedViewModel()
 
-    private var dataList: List<PlayerData>? = null
+    var dataList: List<PlayerData>?=null
     private var adapter: PlayerAdapter? = null
 
     override fun onCreateView(
@@ -56,8 +56,16 @@ class TeamManagementFragment : Fragment() , PlayerListner{
     private fun getTeamsListFromRepository() {
         binding.progressBar.visibility=View.VISIBLE
         teamViewModel.getPlayersList {
-            dataList=it
-            setAdapter(it)
+            if(it!=null) {
+                dataList = it
+                setAdapter(it)
+                binding.noDataTV.visibility=View.GONE
+            }
+            else{
+                binding.noDataTV.visibility=View.VISIBLE
+            }
+            binding.progressBar.visibility=View.GONE
+
         }
     }
 
@@ -65,35 +73,41 @@ class TeamManagementFragment : Fragment() , PlayerListner{
         val gridLayoutManager = GridLayoutManager(requireActivity(), 1)
         binding.recyclerView.setLayoutManager(gridLayoutManager)
         adapter = PlayerAdapter(requireActivity(), playerList,this)
-        binding.progressBar.visibility=View.GONE
         binding.recyclerView.setAdapter(adapter)
     }
 
     private fun searchList(text: String) {
-        val dataSearchList: MutableList<PlayerData> = java.util.ArrayList()
-        for (data in dataList!!) {
-            if (data.playerName.toLowerCase().contains(text.lowercase(Locale.getDefault()))) {
-                dataSearchList.add(data)
+        dataList?.let {
+            val dataSearchList: MutableList<PlayerData> = java.util.ArrayList()
+            for (data in it) {
+                if (data.playerName.toLowerCase().contains(text.lowercase(Locale.getDefault()))) {
+                    dataSearchList.add(data)
+                }
             }
-        }
-        if (dataSearchList.isEmpty()) {
-            Toast.makeText(requireContext(), "Not Found", Toast.LENGTH_SHORT).show()
-        } else {
-            adapter!!.setSearchList(dataSearchList)
+            if (dataSearchList.isEmpty()) {
+                Toast.makeText(requireContext(), "Not Found", Toast.LENGTH_SHORT).show()
+            } else {
+                adapter!!.setSearchList(dataSearchList)
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         getTeamsListFromRepository()
-
     }
 
     override fun onDeletePlayer(player: PlayerData) {
         teamViewModel.deletePlayerFromTeam(player?.playerId) { success ->
             if (success) {
                 val updatedList = dataList?.filter { it.playerId != player.playerId }
-                adapter?.updateList(updatedList)
+                if(updatedList?.size!=0) {
+                    adapter?.updateList(updatedList)
+                    binding.noDataTV.visibility=View.GONE
+                }
+                else{
+                    binding.noDataTV.visibility=View.VISIBLE
+                }
                 Toast.makeText(requireContext(), "Deleted Successfully!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "Unable to delete, tryagain!", Toast.LENGTH_SHORT).show()

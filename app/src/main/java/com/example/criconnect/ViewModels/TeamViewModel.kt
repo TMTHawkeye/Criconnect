@@ -2,6 +2,7 @@ package com.example.criconnect.ViewModels
 
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
+import com.example.criconnect.ModelClasses.MatchModel
 import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
@@ -10,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 
 class TeamViewModel(val repository: TeamRepository) : ViewModel() {
 
-    fun saveTeam(team: TeamModel,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
+    fun saveTeam(team: TeamModel?,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
         repository.addTeamToFirebase(team,selectedDrawable,callback)
     }
 
@@ -26,10 +27,6 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.getRegisteredTeamsInTournament(tournamentId,callback)
     }
 
-   /* fun registerOrganizedMatchesInTournament(tournamentId: String?,dummyTeams : List<TeamModel>?,callback: (Boolean) -> Unit){
-        repository.registerOrganizedMatchesInTournament(tournamentId,dummyTeams,callback)
-    }
-*/
     fun getTournament(callback: (List<TournamentData>?)->Unit){
         repository.getAllTournamentsFromFirebase(callback)
     }
@@ -46,8 +43,12 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.getTeamFromFirebase(callback)
     }
 
-    fun storeMatchesinFirebase(tournamentId: String?,matches: List<Pair<TeamModel, TeamModel>>, callback: (Boolean) -> Unit){
+    fun storeMatchesinFirebase(tournamentId: String?,matches: List<MatchModel>, callback: (Boolean) -> Unit){
         repository.storeMatchesInDatabase(tournamentId,matches,callback)
+    }
+
+    fun getMatchesForTournament(tournamentId: String?,callback: (List<MatchModel>?) -> Unit){
+        repository.getMatchesForTournament(tournamentId,callback)
     }
 
     fun getLoggedInUser() : FirebaseUser?{
@@ -56,6 +57,18 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
 
     fun deletePlayerFromTeam(playerId:String?,callback: (Boolean) -> Unit){
         repository.deletePlayerFromTeam(playerId,callback)
+    }
+
+    fun getSelectedTeamDetails(teamId: String?, callback: (TeamModel?)->Unit){
+        repository.getSelectedTeam(teamId,callback)
+    }
+
+    fun saveMatches(tournamentId: String?, matches: List<MatchModel>, callback: (Boolean) -> Unit){
+        repository.saveMatchesToFirebase(tournamentId,matches,callback)
+    }
+
+    fun updateTeamStats(winnerId: String?, loserId: String?, callback: (Boolean) -> Unit){
+        repository.updateTeamStats(winnerId,loserId,callback)
     }
 
 }

@@ -1,21 +1,21 @@
 package com.example.criconnect.Adapters
 
- import android.content.Context
+import android.content.Context
 import android.content.Intent
- import android.view.LayoutInflater
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
- import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
- import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
- import com.bumptech.glide.request.RequestOptions
- import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.criconnect.Activities.PlayerDetailsActivity
- import com.example.criconnect.Fragments.TeamManagementFragment
- import com.example.criconnect.Interfaces.PlayerListner
- import com.example.criconnect.ModelClasses.PlayerData
- import com.example.criconnect.R
+import com.example.criconnect.Fragments.TeamManagementFragment
+import com.example.criconnect.Interfaces.PlayerListner
+import com.example.criconnect.ModelClasses.PlayerData
+import com.example.criconnect.R
 import com.example.criconnect.databinding.PlayerrecyclerItemBinding
 
 
@@ -57,12 +57,12 @@ class PlayerAdapter(
         loadImage(position, holder)
 
 
-        if(listner==null) {
-            holder.binding.deleteItem.visibility=View.GONE
+        if (listner == null) {
+            holder.binding.deleteItem.visibility = View.GONE
         }
-            holder.binding.deleteItem.setOnClickListener {
-                deletePlayer(position)
-            }
+        holder.binding.deleteItem.setOnClickListener {
+            deletePlayer(position)
+        }
 
 
         holder.binding.recCard.setOnClickListener(View.OnClickListener {
@@ -84,13 +84,14 @@ class PlayerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return dataList?.size?:0
+        return dataList?.size ?: 0
     }
 
-    class PlayerViewHolder(val binding: PlayerrecyclerItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class PlayerViewHolder(val binding: PlayerrecyclerItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
 
-    fun loadImage(position: Int, holder: PlayerViewHolder){
+    fun loadImage(position: Int, holder: PlayerViewHolder) {
         val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
         val options: RequestOptions = RequestOptions()

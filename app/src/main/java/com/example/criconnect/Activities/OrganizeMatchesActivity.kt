@@ -2,201 +2,128 @@ package com.example.criconnect.Activities
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.criconnect.Adapters.MatchesAdapter
+import com.example.criconnect.HelperClasses.Constants.generateMatches
+import com.example.criconnect.ModelClasses.MatchModel
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.Serializable
-import java.util.UUID
 
 
 class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityOrganizeMatchesBinding
     val dataViewModel: TeamViewModel by viewModel()
+    var selectedTournamentId: String? = null
+    var selectedTournamentName: String? = null
+    var matches: List<MatchModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOrganizeMatchesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val tournamentData = intent?.getSerializableExtra("selectedTournament") as TournamentData
-        Log.d("TAGTournamentid", "onCreate: ${tournamentData.tournamentId}")
-
-        if (tournamentData != null) {
-            binding.titleTournament.text = tournamentData.tournamentName
-            dataViewModel.getRegisteredTeamsInTournament(tournamentData.tournamentId) { registeredTeams ->
-                val matches = generateMatches(registeredTeams)
-                storeMatchesInDatabase(tournamentData.tournamentId, matches)
-            }
-        }
     }
 
-    fun storeMatchesInDatabase(tournamentId: String?, matches: List<Pair<TeamModel, TeamModel>>) {
-        dataViewModel.storeMatchesinFirebase(tournamentId, matches) {
+    fun storeMatchesInDatabase(tournamentId: String?, matches: List<MatchModel>) {
+        dataViewModel.saveMatches(tournamentId,matches){
+            Log.d("matchIdii", "onCreate: ${matches?.get(0)?.teamAId}")
             setAdapter(matches)
         }
+
     }
 
-    fun setAdapter(matches: List<Pair<TeamModel, TeamModel>>) {
-        (binding.matchesRV.getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+    fun setAdapter(matchesList: List<MatchModel>) {
+        var adapter =
+            MatchesAdapter(this@OrganizeMatchesActivity, matchesList) { selectedWinner,selectedLooser, position ->
 
-        binding.matchesRV.layoutManager = LinearLayoutManager(this@OrganizeMatchesActivity)
-        binding.matchesRV.adapter = MatchesAdapter(this@OrganizeMatchesActivity, matches)
-        binding.matchesRV.setHasFixedSize(true)
-    }
-
-    private fun generateMatches(teamsList: List<TeamModel>?): List<Pair<TeamModel, TeamModel>> {
-        val matches = mutableListOf<Pair<TeamModel, TeamModel>>()
-
-        if (teamsList != null && teamsList.size >= 2) {
-
-            when (teamsList.size) {
-                3 -> {
-                    matches.add(Pair(teamsList[0], teamsList[1]))
-                    matches.add(Pair(teamsList[1], teamsList[2]))
-                    matches.add(Pair(teamsList[2], teamsList[0]))
-
-                    val finalistMatch =
-                        Pair(TeamModel(teamName = "Finalist 1"), TeamModel(teamName = "Finalist 2"))
-                    matches.add(finalistMatch)
-                }
-
-                4 -> { // For 4 teams
-                    // Semi-finals
-                    matches.add(Pair(teamsList[0], teamsList[3]))
-                    matches.add(Pair(teamsList[1], teamsList[2]))
-
-                    // Semi-finals
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 1"),
-                            TeamModel(teamName = "Winner 2")
-                        )
-                    )
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 3"),
-                            TeamModel(teamName = "Winner 4")
-                        )
-                    )
-
-                    val finalistMatch =
-                        Pair(TeamModel(teamName = "Finalist 1"), TeamModel(teamName = "Finalist 2"))
-                    matches.add(finalistMatch)
-                }
-
-                8 -> { // For 8 teams
-                    // Quarter-finals
-                    val quarterFinalTeams = listOf(
-                        Pair(teamsList[0], teamsList[7]),
-                        Pair(teamsList[1], teamsList[6]),
-                        Pair(teamsList[2], teamsList[5]),
-                        Pair(teamsList[3], teamsList[4])
-                    )
-                    matches.addAll(quarterFinalTeams)
-
-                    // Semi-finals
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 1"),
-                            TeamModel(teamName = "Winner 2")
-                        )
-                    )
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 3"),
-                            TeamModel(teamName = "Winner 4")
-                        )
-                    )
-
-                    // Final
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Finalist 1"),
-                            TeamModel(teamName = "Finalist 2")
-                        )
-                    )
-                }
-
-                12 -> { // For 12 teams
-                    // Preliminary Round
-                    val preliminaryRoundMatches = mutableListOf<Pair<TeamModel, TeamModel>>()
-                    for (i in 0 until teamsList.size - 1) {
-                        for (j in i + 1 until teamsList.size) {
-                            preliminaryRoundMatches.add(Pair(teamsList[i], teamsList[j]))
-                        }
+                dataViewModel.updateTeamStats(selectedWinner, selectedLooser) { success ->
+                    if (success) {
+                        Toast.makeText(this@OrganizeMatchesActivity, "Team stats updated successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@OrganizeMatchesActivity, "Failed to update team stats", Toast.LENGTH_SHORT).show()
                     }
-
-                    // Distribute matches evenly for each team
-                    val distributedMatches =
-                        distributeMatchesEvenly(preliminaryRoundMatches, teamsList.size)
-
-                    matches.addAll(distributedMatches)
-
-                    // Quarter-finals
-                    val quarterFinalTeams = listOf(
-                        Pair(teamsList[0], teamsList[11]),
-                        Pair(teamsList[1], teamsList[10]),
-                        Pair(teamsList[2], teamsList[9]),
-                        Pair(teamsList[3], teamsList[8])
-                    )
-                    matches.addAll(quarterFinalTeams)
-
-                    // Semi-finals
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 1"),
-                            TeamModel(teamName = "Winner 2")
-                        )
-                    )
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Winner 3"),
-                            TeamModel(teamName = "Winner 4")
-                        )
-                    )
-
-                    // Final
-                    matches.add(
-                        Pair(
-                            TeamModel(teamName = "Finalist 1"),
-                            TeamModel(teamName = "Finalist 2")
-                        )
-                    )
                 }
-
-                else -> {
-                    println("Unsupported number of teams")
-                }
+//                // Update wins count for the corresponding team
+//                if (selectedWinner != null && selectedWinner.isNotEmpty()) {
+//                    matches?.get(position)?.winner = selectedWinner!!
+//                    var newTeam: TeamModel? = null
+//
+//                    for (team in tournamentData?.teamList ?: ArrayList()) {
+//                        if (team.teamId == selectedWinner) {
+//                            newTeam = team
+//                            break
+//                        }
+//                    }
+//
+//                    if (newTeam != null) {
+//                        newTeam?.wins = newTeam.wins + 1
+//                        dataViewModel.saveTeam(newTeam, getDrawable(R.drawable.circlelogo)) {
+//                            if (it) {
+//                                Toast.makeText(
+//                                    this@OrganizeMatchesActivity,
+//                                    "Saved in team",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//                            } else {
+//                                Toast.makeText(
+//                                    this@OrganizeMatchesActivity,
+//                                    "Not Saved in team",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
+//
+//                            }
+//                        }
+//                    }
+//
+//                }
+//
+//                storeMatchesInDatabase(tournamentData?.tournamentId, match\ujes!!)
             }
-        } else {
-            println("Invalid teams list")
+        binding.matchesRV.apply {
+            (getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+            this.layoutManager = LinearLayoutManager(this@OrganizeMatchesActivity)
+            this.adapter = adapter
+            setHasFixedSize(true)
         }
 
-        return matches
     }
+
 
     // Function to distribute matches evenly for each team
-    private fun distributeMatchesEvenly(
-        matches: List<Pair<TeamModel, TeamModel>>,
-        numTeams: Int
-    ): List<Pair<TeamModel, TeamModel>> {
-        val distributedMatches = mutableListOf<Pair<TeamModel, TeamModel>>()
-        val matchesPerTeam = numTeams / 2
 
-        for (i in 0 until matchesPerTeam) {
-            for (j in 0 until numTeams step matchesPerTeam) {
-                distributedMatches.add(matches[i + j])
+
+    override fun onResume() {
+        super.onResume()
+        selectedTournamentId = intent?.getStringExtra("selectedTournament")
+        selectedTournamentName= intent?.getStringExtra("tournamentName")
+        binding.titleTournament.text=selectedTournamentName
+
+        dataViewModel.getMatchesForTournament(selectedTournamentId) { existingMatches ->
+            if (existingMatches?.size==0) {
+                dataViewModel.getRegisteredTeamsInTournament(selectedTournamentId) { registeredTeams ->
+                    matches = generateMatches(registeredTeams)
+                    matches?.let {
+                        storeMatchesInDatabase(selectedTournamentId, it)
+                        setAdapter(it)
+                    }
+                }
+            } else {
+                matches = existingMatches
+                matches?.let {
+                    setAdapter(it)
+                }
             }
         }
-
-        return distributedMatches
     }
+
+
 
 
 }

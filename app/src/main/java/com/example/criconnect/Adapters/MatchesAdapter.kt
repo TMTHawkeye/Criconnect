@@ -3,46 +3,107 @@ package com.example.criconnect.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criconnect.Activities.OrganizeMatchesActivity
 import com.example.criconnect.HelperClasses.Constants.loadImage
-import com.example.criconnect.ModelClasses.TeamModel
+import com.example.criconnect.ModelClasses.MatchModel
+import com.example.criconnect.R
 import com.example.criconnect.databinding.ItemMatchBinding
 
 class MatchesAdapter(
-    val ctxt: OrganizeMatchesActivity,
-    val matches: List<Pair<TeamModel, TeamModel>>?
-) : RecyclerView.Adapter<MatchesAdapter.viewHolder>() {
-    lateinit var binding : ItemMatchBinding
+    private val ctxt: OrganizeMatchesActivity,
+    private val matches: List<MatchModel>?,
+    private val onWinnerSelected: (String?, String?, Int) -> Unit // Callback to notify winner selection
+) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
+
     private var expandedStates = BooleanArray(itemCount) { false }
 
-    inner class viewHolder(val binding: ItemMatchBinding) : RecyclerView.ViewHolder(binding.root)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolder {
-        binding = ItemMatchBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return viewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return matches?.size?:0
-     }
+    override fun getItemCount(): Int = matches?.size ?: 0
 
-    override fun onBindViewHolder(holder: viewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val match = matches?.get(position)
+        holder.bind(match, position)
+    }
 
-        holder.binding.apply {
-            homeTeamName.text = match?.first?.teamName
-            awayTeamName.text = match?.second?.teamName
+    inner class ViewHolder(private val binding: ItemMatchBinding) : RecyclerView.ViewHolder(binding.root) {
 
-            loadImage(ctxt, homeTeamLogo, match?.first?.teamLogo)
-            loadImage(ctxt, awayTeamLogo, match?.second?.teamLogo)
+        fun bind(match: MatchModel?, position: Int) {
+            match?.let { match ->
+                binding.apply {
+                    // Fetch team A details
+                    ctxt.dataViewModel.getSelectedTeamDetails(match.teamAId) { teamA ->
+                        // Fetch team B details
+                        ctxt.dataViewModel.getSelectedTeamDetails(match.teamBId) { teamB ->
+                            with(binding) {
+                                // Set team A details
+                                homeTeamName.text = teamA?.teamName
+                                loadImage(ctxt, homeTeamLogo, teamA?.teamLogo)
 
-            subItem.visibility = if (expandedStates[position]) View.VISIBLE else View.GONE
-        }
+                                // Set team B details
+                                awayTeamName.text = teamB?.teamName
+                                loadImage(ctxt, awayTeamLogo, teamB?.teamLogo)
 
-        holder.binding.root.setOnClickListener {
-            expandedStates[position] = !expandedStates[position]
-            notifyItemChanged(position)
+                                // Handle winner selection
+                                radioGroup.setOnCheckedChangeListener(null) // Remove previous listener
+                                if (match.winnerId == teamA?.teamId) {
+                                    radioGroup.check(R.id.radio_team_a)
+                                } else if (match.winnerId == teamB?.teamId) {
+                                    radioGroup.check(R.id.radio_team_b)
+                                } else {
+                                    radioGroup.clearCheck()
+                                }
+
+                                radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                                    val winnerId = if (checkedId == R.id.radio_team_a) {
+                                        teamA?.teamId
+                                    } else {
+                                        teamB?.teamId
+                                    }
+                                    val loserId = if (checkedId == R.id.radio_team_a) {
+                                        teamB?.teamId
+                                    } else {
+                                        teamA?.teamId
+                                    }
+                                 }
+
+                                // Handle expanding and collapsing of sub item
+                                root.setOnClickListener {
+                                    expandedStates[position] = !expandedStates[position]
+                                    notifyItemChanged(position)
+                                }
+                                subItem.visibility = if (expandedStates[position]) View.VISIBLE else View.GONE
+
+                                // Handle "OK" button click
+                                okId.setOnClickListener {
+                                    val checkedRadioButtonId = radioGroup.checkedRadioButtonId
+                                    val winnerId = if (checkedRadioButtonId == R.id.radio_team_a) {
+                                        teamA?.teamId
+                                    } else if (checkedRadioButtonId == R.id.radio_team_b) {
+                                        teamB?.teamId
+                                    } else {
+                                        null
+                                    }
+                                    val loserId = if (checkedRadioButtonId == R.id.radio_team_a) {
+                                        teamB?.teamId
+                                    } else if (checkedRadioButtonId == R.id.radio_team_b) {
+                                        teamA?.teamId
+                                    } else {
+                                        null
+                                    }
+                                    onWinnerSelected(winnerId, loserId, adapterPosition)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

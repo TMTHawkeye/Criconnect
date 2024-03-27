@@ -54,13 +54,17 @@ class HomeFragment : Fragment() {
                         )
                     )
                     adapter.addItem(tournamentItem)
-                    binding.progressBar.visibility=View.GONE
-
                 }
+                binding.noDataId.visibility=View.GONE
+                binding.sliderView.visibility=View.VISIBLE
+
             }
             else{
-
+                binding.sliderView.visibility=View.GONE
+                binding.noDataId.visibility=View.VISIBLE
             }
+            binding.progressBar.visibility=View.GONE
+
         }
         binding.sliderView.setSliderAdapter(adapter)
         binding.sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM)

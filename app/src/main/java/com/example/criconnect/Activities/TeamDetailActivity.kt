@@ -2,6 +2,7 @@ package com.example.criconnect.Activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,29 +22,38 @@ import com.example.criconnect.databinding.ActivityTeamDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TeamDetailActivity : AppCompatActivity(), PlayerListner {
-    lateinit var binding : ActivityTeamDetailBinding
-    var selectedTeam : TeamModel?=null
+    lateinit var binding: ActivityTeamDetailBinding
+    var selectedTeam: TeamModel? = null
+    var selectedTeamId: String? = null
+    var selectedTournament: String? = null
     private var adapter: PlayerAdapter? = null
 
-    val teamViewModel : TeamViewModel by viewModel()
+    val teamViewModel: TeamViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTeamDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        selectedTeam = intent?.getSerializableExtra("selectedTeam") as TeamModel
+        selectedTeamId = intent?.getStringExtra("selectedTeamId")
+        selectedTournament = intent?.getStringExtra("selectedTournament")
 
-        binding.teamNameId.text=selectedTeam?.teamName
-        binding.captainNameTxt.text=selectedTeam?.captainName
-        binding.ageId.text=selectedTeam?.city
-        binding.phoneId.text=selectedTeam?.homeGround
-        loadImage()
+        Log.d("TAGselecteditem", "onCreate: $selectedTeamId and $selectedTournament")
 
-        setAdapter(selectedTeam?.playerData)
+        teamViewModel.getSelectedTeamDetails(selectedTeamId) { team ->
+            selectedTeam = team
+
+            binding.teamNameId.text = selectedTeam?.teamName
+            binding.captainNameTxt.text = selectedTeam?.captainName
+            binding.ageId.text = selectedTeam?.city
+            binding.phoneId.text = selectedTeam?.homeGround
+            loadImage()
+
+            setAdapter(selectedTeam?.playerData)
+        }
     }
 
-    fun loadImage(){
+    fun loadImage() {
         val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
         val options: RequestOptions = RequestOptions()
@@ -64,7 +74,7 @@ class TeamDetailActivity : AppCompatActivity(), PlayerListner {
         val gridLayoutManager = GridLayoutManager(this@TeamDetailActivity, 1)
         binding.teamsRV.setLayoutManager(gridLayoutManager)
 
-        val user=teamViewModel.getLoggedInUser()
+        val user = teamViewModel.getLoggedInUser()
         if(user?.uid?.equals(selectedTeam?.teamId) == true){
             adapter = PlayerAdapter(this@TeamDetailActivity, playerList,this)
         }
@@ -81,9 +91,14 @@ class TeamDetailActivity : AppCompatActivity(), PlayerListner {
             if (success) {
                 val updatedList = selectedTeam?.playerData?.filter { it.playerId != player.playerId }
                 adapter?.updateList(updatedList)
-                Toast.makeText(this@TeamDetailActivity, "Deleted Successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@TeamDetailActivity, "Deleted Successfully!", Toast.LENGTH_SHORT)
+                    .show()
             } else {
-                Toast.makeText(this@TeamDetailActivity, "Unable to delete, tryagain!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@TeamDetailActivity,
+                    "Unable to delete, tryagain!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

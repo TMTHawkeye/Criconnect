@@ -12,7 +12,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
-import com.example.criconnect.Adapters.PlayerAdapter
 import com.example.criconnect.Adapters.RegisteredTeamsAdapter
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
@@ -55,9 +54,11 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
         }
 
         binding.btnOrganizeMatches.setOnClickListener {
+            Log.d("TAGttt", "onCreate: ${selectedTournament?.teamList?.size}")
             startActivity(
                 Intent(this@TournamentDetailActivity, OrganizeMatchesActivity::class.java)
-                    .putExtra("selectedTournament", selectedTournament)
+                    .putExtra("selectedTournament", selectedTournament?.tournamentId)
+                    .putExtra("tournamentName",selectedTournament?.tournamentName)
             )
 
         }
@@ -143,7 +144,7 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
     fun setAdapter(teamsList: List<TeamModel>?) {
         binding.teamsRV.visibility=View.VISIBLE
         binding.teamsRV.layoutManager = LinearLayoutManager(this@TournamentDetailActivity)
-        binding.teamsRV.adapter = RegisteredTeamsAdapter(this@TournamentDetailActivity, teamsList)
+        binding.teamsRV.adapter = RegisteredTeamsAdapter(this@TournamentDetailActivity, teamsList,selectedTournament?.tournamentId)
     }
 
 

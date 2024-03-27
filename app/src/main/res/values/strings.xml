@@ -55,6 +55,7 @@
     <string name="delete">Delete</string>
     <string name="captainName">"Captain Name : "</string>
     <string name="homeGround">Home Ground :</string>
+    <string name="noDatafound">No Data Found</string>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>

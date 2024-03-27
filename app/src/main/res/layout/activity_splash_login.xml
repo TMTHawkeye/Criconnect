@@ -121,28 +121,35 @@
             <!--            android:layout_height="32dp"-->
             <!--            android:id="@+id/imageView_show_hide_pwd"-->
             <!--            />-->
-            <EditText
-                android:id="@+id/editText_login_pwd"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_login_pwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/edittext_bg"
-                android:drawableStart="@drawable/ic_baseline_lock_24"
-                android:drawableLeft="@drawable/ic_baseline_lock_24"
-                android:drawableEnd="@drawable/ic_baseline_visibility_24"
-                android:drawableRight="@drawable/ic_baseline_visibility_24"
-                android:drawablePadding="@dimen/_16sdp"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:padding="@dimen/_12sdp"
-                android:textSize="@dimen/_12ssp" />
-            <com.example.criconnect.CustomClasses.CustomSpinner
-                android:id="@+id/spinner_fruits"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:dropDownVerticalOffset="40dp"
-                android:layout_margin="16dp"
-                android:background="@drawable/bg_spinner_fruit"/>
+                android:layout_marginTop="20dp">
+
+                <EditText
+                    android:id="@+id/editText_login_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"
+                    android:drawableStart="@drawable/ic_baseline_lock_24"
+                    android:drawableLeft="@drawable/ic_baseline_lock_24"
+                    android:inputType="textPassword"
+                    android:hint="Password"
+                    android:padding="@dimen/_12sdp"
+                    android:textSize="@dimen/_12ssp" />
+
+                <ImageView
+                    android:id="@+id/imageView_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_baseline_visibility_24"
+                    android:padding="@dimen/_12sdp"
+                    android:contentDescription="Toggle password visibility" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <Button
                 android:id="@+id/tv_loginbutton"

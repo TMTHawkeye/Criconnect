@@ -11,14 +11,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.criconnect.Activities.TeamDetailActivity
 import com.example.criconnect.Activities.TournamentDetailActivity
-import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.R
 import com.example.criconnect.databinding.ItemTournamentBinding
 
 class RegisteredTeamsAdapter(
     val ctxt: TournamentDetailActivity,
-    val teamsList: List<TeamModel>?
+    val teamsList: List<TeamModel>?,
+    val tournamentId: String?
 ) : RecyclerView.Adapter<RegisteredTeamsAdapter.viewHolder>() {
 
     lateinit var binding : ItemTournamentBinding
@@ -43,7 +43,8 @@ class RegisteredTeamsAdapter(
 
         holder.itemView.setOnClickListener {
             ctxt.startActivity(Intent(ctxt,TeamDetailActivity::class.java)
-                .putExtra("selectedTeam",teamsList?.get(position)))
+                .putExtra("selectedTeamId",teamsList?.get(position)?.teamId)
+                .putExtra("selectedTournament",tournamentId))
         }
      }
 

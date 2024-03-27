@@ -50,6 +50,8 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
         Log.d("TAGTournamentid", "onCreate: ${dataList?.get(position)?.tournamentId}")
 
         holder.binding.recCard.setOnClickListener {
+            Log.d("tagsdsd", "onCreate: ${dataList?.get(position)?.teamList?.size}")
+
             val intent = Intent(ctxt, TournamentDetailActivity::class.java)
                 .putExtra("selectedTournament",dataList?.get(position))
             ctxt.startActivity(intent)

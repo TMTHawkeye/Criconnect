@@ -93,7 +93,7 @@ class TournamentDataActivity : AppCompatActivity() {
     private fun searchList(text: String) {
         val dataSearchList: MutableList<TournamentData> = ArrayList()
         for (data in dataList!!) {
-            if (data.tournamentName.toLowerCase().contains(text.lowercase(Locale.getDefault()))) {
+            if (data.tournamentName?.toLowerCase()!!.contains(text.lowercase(Locale.getDefault()))) {
                 dataSearchList.add(data)
             }
         }

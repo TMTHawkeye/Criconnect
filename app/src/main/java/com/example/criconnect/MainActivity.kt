@@ -113,6 +113,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getRegisteredTeamDetails(dialog: ProgressDialog) {
+//        val user=teamViewModel.getLoggedInUser()
+//        teamViewModel.getSelectedTeamDetails(user?.uid) { teamData ->
+//            if(team!=null){
+//                dialog.dismiss()
+//                if (teamData != null) {
+//                    storeTeamDataInSharedPreferences(this@MainActivity,teamData)
+//                }
+//            }
+//            else{
+//                val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
+//                Handler().postDelayed({
+//                    dialog.dismiss()
+//                    startActivity(intent)
+//                }, 2000)
+//            }
+//        }
+
         teamViewModel.getTeamData() { teamData, isAvailable ->
             if (isAvailable) {
                 dialog.dismiss()

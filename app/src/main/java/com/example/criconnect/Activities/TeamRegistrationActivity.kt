@@ -39,6 +39,8 @@ class TeamRegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityTeamRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+
 
         team = getTeamData(this@TeamRegistrationActivity)
         if(team!=null){
@@ -62,7 +64,10 @@ class TeamRegistrationActivity : AppCompatActivity() {
                 teamName = binding.teamNameET.text.toString(),
                 captainName = binding.captainNameET.text.toString(),
                 city = binding.teamCityET.text.toString(),
-                homeGround = binding.homeGroundET.text.toString()
+                homeGround = binding.homeGroundET.text.toString(),
+                wins = 0,
+                loss = 0
+
             )
             val dialog = ProgressDialog.show(
                 this@TeamRegistrationActivity, "",

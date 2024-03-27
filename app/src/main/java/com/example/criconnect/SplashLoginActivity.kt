@@ -1,13 +1,13 @@
 package com.example.criconnect
 
-import android.content.Context
+ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.util.Patterns
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,12 +16,10 @@ import com.example.criconnect.Activities.RegisterUserActivity
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivitySplashLoginBinding
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class SplashLoginActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashLoginBinding
@@ -29,6 +27,7 @@ class SplashLoginActivity : AppCompatActivity() {
     private val TAG = "LoginActivity"
 
     val dataViewModel: TeamViewModel by viewModel()
+    private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +35,23 @@ class SplashLoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         authProfile = FirebaseAuth.getInstance()
-        val buttonLogin = findViewById<Button>(R.id.tv_loginbutton)
-        val buttonForgotPassword = findViewById<Button>(R.id.tv_forgotPassword)
 
-        buttonForgotPassword.setOnClickListener {
+        binding.imageViewVisibility.setOnClickListener(View.OnClickListener { // Toggle password visibility
+            if (isPasswordVisible) {
+                // Hide password
+                binding.editTextLoginPwd.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                binding.imageViewVisibility.setImageResource(R.drawable.ic_baseline_visibility_off_24)
+            } else {
+                // Show password
+                binding.editTextLoginPwd.setTransformationMethod(null)
+                binding.imageViewVisibility.setImageResource(R.drawable.ic_baseline_visibility_24)
+            }
+            isPasswordVisible = !isPasswordVisible
+            // Move cursor to the end of the text
+            binding.editTextLoginPwd.setSelection(binding.editTextLoginPwd.getText().length)
+        })
+
+        binding.tvForgotPassword.setOnClickListener {
             Toast.makeText(
                 this@SplashLoginActivity,
                 "You can reset password now!",
@@ -66,7 +78,7 @@ class SplashLoginActivity : AppCompatActivity() {
 //                }
 //            }
 //        });
-        buttonLogin.setOnClickListener {
+        binding.tvLoginbutton.setOnClickListener {
             val textEmail: String = binding.editTextLoginEmail.getText().toString()
             val textPwd: String = binding.editTextLoginPwd.getText().toString()
             if (TextUtils.isEmpty(textEmail)) {
