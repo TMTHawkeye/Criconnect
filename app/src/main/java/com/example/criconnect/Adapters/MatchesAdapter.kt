@@ -1,12 +1,11 @@
 package com.example.criconnect.Adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.criconnect.Activities.OrganizeMatchesActivity
 import com.example.criconnect.HelperClasses.Constants.loadImage
-import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.databinding.ItemMatchBinding
 
@@ -15,6 +14,7 @@ class MatchesAdapter(
     val matches: List<Pair<TeamModel, TeamModel>>?
 ) : RecyclerView.Adapter<MatchesAdapter.viewHolder>() {
     lateinit var binding : ItemMatchBinding
+    private var expandedStates = BooleanArray(itemCount) { false }
 
     inner class viewHolder(val binding: ItemMatchBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -28,11 +28,21 @@ class MatchesAdapter(
      }
 
     override fun onBindViewHolder(holder: viewHolder, position: Int) {
+        val match = matches?.get(position)
 
-        holder.binding.homeTeamName.text = matches?.get(position)?.first?.teamName
-        holder.binding.awayTeamName.text = matches?.get(position)?.second?.teamName
+        holder.binding.apply {
+            homeTeamName.text = match?.first?.teamName
+            awayTeamName.text = match?.second?.teamName
 
-        loadImage(ctxt,holder.binding.homeTeamLogo,matches?.get(position)?.first?.teamLogo)
-        loadImage(ctxt,holder.binding.awayTeamLogo,matches?.get(position)?.second?.teamLogo)
+            loadImage(ctxt, homeTeamLogo, match?.first?.teamLogo)
+            loadImage(ctxt, awayTeamLogo, match?.second?.teamLogo)
+
+            subItem.visibility = if (expandedStates[position]) View.VISIBLE else View.GONE
+        }
+
+        holder.binding.root.setOnClickListener {
+            expandedStates[position] = !expandedStates[position]
+            notifyItemChanged(position)
+        }
     }
 }

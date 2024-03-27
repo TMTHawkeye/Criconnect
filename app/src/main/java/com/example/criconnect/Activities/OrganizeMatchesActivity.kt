@@ -1,9 +1,10 @@
 package com.example.criconnect.Activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.criconnect.Adapters.MatchesAdapter
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
@@ -12,6 +13,7 @@ import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.Serializable
 import java.util.UUID
+
 
 class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityOrganizeMatchesBinding
@@ -41,8 +43,11 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     }
 
     fun setAdapter(matches: List<Pair<TeamModel, TeamModel>>) {
+        (binding.matchesRV.getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+
         binding.matchesRV.layoutManager = LinearLayoutManager(this@OrganizeMatchesActivity)
         binding.matchesRV.adapter = MatchesAdapter(this@OrganizeMatchesActivity, matches)
+        binding.matchesRV.setHasFixedSize(true)
     }
 
     private fun generateMatches(teamsList: List<TeamModel>?): List<Pair<TeamModel, TeamModel>> {
@@ -191,35 +196,6 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
         }
 
         return distributedMatches
-    }
-
-    // Helper function to determine the winner team
-    private fun getWinnerTeam(team1: TeamModel, team2: TeamModel): TeamModel {
-        // For simplicity, we can just return the team with a higher alphabetical name
-        return if (team1.teamName < team2.teamName) team1 else team2
-    }
-
-
-    fun createDummyTeams(): List<TeamModel> {
-        val dummyTeams = mutableListOf<TeamModel>()
-
-        for (i in 1..8) {
-            val teamName = "Team $i"
-            val captainName = "Captain ${UUID.randomUUID()}"
-            val city = "City ${UUID.randomUUID()}"
-            val homeGround = "Ground ${UUID.randomUUID()}"
-
-            val dummyTeam = TeamModel(
-                teamName = teamName,
-                captainName = captainName,
-                city = city,
-                homeGround = homeGround
-            )
-
-            dummyTeams.add(dummyTeam)
-        }
-
-        return dummyTeams
     }
 
 
