@@ -38,18 +38,18 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_slider"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_marginVertical="@dimen/_15sdp"
         android:layout_marginStart="20dp"
-        android:id="@+id/card_slider"
         android:layout_marginEnd="20dp"
         app:cardBackgroundColor="@color/lavender"
         app:cardCornerRadius="20dp"
-        app:cardElevation="20dp"
 
+        app:cardElevation="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="@dimen/_15sdp"
         app:layout_constraintTop_toBottomOf="@+id/Tournamentname">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +60,7 @@
                 android:id="@+id/sliderView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -89,17 +89,17 @@
 
             <TextView
                 android:id="@+id/noDataId"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@string/noDatafound"
-                android:textSize="@dimen/_16sdp"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -117,21 +117,21 @@
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_slider"/>
+        app:layout_constraintTop_toBottomOf="@+id/card_slider" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginVertical="@dimen/_15sdp"
 
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:cardBackgroundColor="@color/lavender"
         app:cardCornerRadius="20dp"
-        app:cardElevation="20dp"
 
+        app:cardElevation="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="@dimen/_15sdp"
         app:layout_constraintTop_toBottomOf="@+id/profileTitlw">
 
 
@@ -140,117 +140,138 @@
             android:layout_height="match_parent"
             android:padding="@dimen/_20sdp">
 
-            <TextView
-                android:id="@+id/captionname"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constrain_profile_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="Asim (Caption Name)"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="19sp"
+                android:layout_height="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginVertical="@dimen/_15sdp"
-                android:alpha="0.5"
-                android:id="@+id/seperater_line_id"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/captionname"
-                app:layout_constraintBottom_toTopOf="@+id/posts"/>
+                app:layout_constraintBottom_toBottomOf="parent">
 
+                <TextView
+                    android:id="@+id/captionname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Asim (Caption Name)"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/seperater_line_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginVertical="@dimen/_15sdp"
+                    android:alpha="0.5"
+                    android:background="@color/white"
+                    app:layout_constraintBottom_toTopOf="@+id/posts"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/captionname" />
+
+                <TextView
+                    android:id="@+id/posts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match played"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    app:layout_constraintEnd_toStartOf="@+id/followers"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/seperater_line_id" />
+
+                <TextView
+                    android:id="@+id/matchesPlayedId"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/posts"
+                    app:layout_constraintStart_toStartOf="@+id/posts"
+                    app:layout_constraintTop_toBottomOf="@+id/posts" />
+
+                <TextView
+                    android:id="@+id/followers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match Won"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/posts"
+                    app:layout_constraintEnd_toStartOf="@+id/following"
+                    app:layout_constraintStart_toEndOf="@+id/posts"
+                    app:layout_constraintTop_toTopOf="@+id/posts" />
+
+                <TextView
+                    android:id="@+id/wonId"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/followers"
+                    app:layout_constraintStart_toStartOf="@+id/followers"
+                    app:layout_constraintTop_toTopOf="@+id/matchesPlayedId" />
+
+                <TextView
+                    android:id="@+id/following"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:text="Match loss"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/followers"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/followers"
+                    app:layout_constraintTop_toTopOf="@id/followers" />
+
+                <TextView
+                    android:id="@+id/lossId"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/following"
+                    app:layout_constraintStart_toStartOf="@+id/following"
+                    app:layout_constraintTop_toTopOf="@+id/matchesPlayedId" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:layout_marginTop="@dimen/_15sdp"
-                android:id="@+id/posts"
-                android:layout_width="0dp"
+                android:id="@+id/noDataIdTV"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="Match played"
-                android:textAlignment="center"
+                android:text="@string/noDatafound"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
                 android:textColor="@color/white"
-                android:textSize="19sp"
-                app:layout_constraintEnd_toStartOf="@+id/followers"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/seperater_line_id"/>
-
-            <TextView
-                android:id="@+id/postsNumber"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="6"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/posts"
-                app:layout_constraintStart_toStartOf="@+id/posts"
-                app:layout_constraintEnd_toEndOf="@+id/posts"/>
-
-
-            <TextView
-                android:id="@+id/followers"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="Match Won"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toStartOf="@+id/following"
-                android:textColor="@color/white"
-                android:textSize="19sp"
-                app:layout_constraintStart_toEndOf="@+id/posts"
-                app:layout_constraintTop_toTopOf="@+id/posts"
-                app:layout_constraintBottom_toBottomOf="@+id/posts"/>
-
-            <TextView
-                android:id="@+id/followersNo"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="4"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/followers"
-                app:layout_constraintTop_toTopOf="@+id/postsNumber"
-                app:layout_constraintEnd_toEndOf="@+id/followers"/>
-
-
-            <TextView
-                android:id="@+id/following"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="Match loss"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="19sp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/followers"
-                app:layout_constraintTop_toTopOf="@id/followers"
-                app:layout_constraintBottom_toBottomOf="@+id/followers"/>
-
-            <TextView
-                android:id="@+id/followingNo"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="2"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/following"
-                app:layout_constraintTop_toTopOf="@+id/postsNumber"
-                app:layout_constraintEnd_toEndOf="@+id/following"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

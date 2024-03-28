@@ -3,8 +3,6 @@ package com.example.criconnect.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criconnect.Activities.OrganizeMatchesActivity
 import com.example.criconnect.HelperClasses.Constants.loadImage
@@ -15,7 +13,7 @@ import com.example.criconnect.databinding.ItemMatchBinding
 class MatchesAdapter(
     private val ctxt: OrganizeMatchesActivity,
     private val matches: List<MatchModel>?,
-    private val onWinnerSelected: (String?, String?, Int) -> Unit // Callback to notify winner selection
+    private val onWinnerSelected: (String?,String?, String?) -> Unit
 ) : RecyclerView.Adapter<MatchesAdapter.ViewHolder>() {
 
     private var expandedStates = BooleanArray(itemCount) { false }
@@ -37,20 +35,16 @@ class MatchesAdapter(
         fun bind(match: MatchModel?, position: Int) {
             match?.let { match ->
                 binding.apply {
-                    // Fetch team A details
                     ctxt.dataViewModel.getSelectedTeamDetails(match.teamAId) { teamA ->
-                        // Fetch team B details
                         ctxt.dataViewModel.getSelectedTeamDetails(match.teamBId) { teamB ->
                             with(binding) {
-                                // Set team A details
                                 homeTeamName.text = teamA?.teamName
                                 loadImage(ctxt, homeTeamLogo, teamA?.teamLogo)
 
-                                // Set team B details
                                 awayTeamName.text = teamB?.teamName
                                 loadImage(ctxt, awayTeamLogo, teamB?.teamLogo)
 
-                                // Handle winner selection
+
                                 radioGroup.setOnCheckedChangeListener(null) // Remove previous listener
                                 if (match.winnerId == teamA?.teamId) {
                                     radioGroup.check(R.id.radio_team_a)
@@ -73,14 +67,12 @@ class MatchesAdapter(
                                     }
                                  }
 
-                                // Handle expanding and collapsing of sub item
                                 root.setOnClickListener {
                                     expandedStates[position] = !expandedStates[position]
                                     notifyItemChanged(position)
                                 }
                                 subItem.visibility = if (expandedStates[position]) View.VISIBLE else View.GONE
 
-                                // Handle "OK" button click
                                 okId.setOnClickListener {
                                     val checkedRadioButtonId = radioGroup.checkedRadioButtonId
                                     val winnerId = if (checkedRadioButtonId == R.id.radio_team_a) {
@@ -90,6 +82,7 @@ class MatchesAdapter(
                                     } else {
                                         null
                                     }
+                                    match.winnerId=winnerId
                                     val loserId = if (checkedRadioButtonId == R.id.radio_team_a) {
                                         teamB?.teamId
                                     } else if (checkedRadioButtonId == R.id.radio_team_b) {
@@ -97,7 +90,7 @@ class MatchesAdapter(
                                     } else {
                                         null
                                     }
-                                    onWinnerSelected(winnerId, loserId, adapterPosition)
+                                    onWinnerSelected(match?.matchId,winnerId, loserId)
                                 }
                             }
                         }

@@ -18,11 +18,10 @@
         style="@style/CustomTabLayout"
         app:tabIndicator="@drawable/tab_indicator"/>
 
-
-
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_70sdp"
         android:id="@+id/viewpager2"/>
 
 

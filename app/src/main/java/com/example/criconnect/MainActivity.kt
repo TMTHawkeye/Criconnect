@@ -30,7 +30,6 @@ import com.example.criconnect.Fragments.TeamManagementFragment
 import com.example.criconnect.Fragments.TeamStatisticsFragment
 import com.example.criconnect.HelperClasses.Constants
 import com.example.criconnect.HelperClasses.Constants.deleteTeamDataFromSharedPreferences
-import com.example.criconnect.HelperClasses.Constants.getTeamData
 import com.example.criconnect.HelperClasses.Constants.storeTeamDataInSharedPreferences
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
@@ -132,6 +131,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         teamViewModel.getTeamData() { teamData, isAvailable ->
             if (isAvailable) {
+                team=teamData
                 dialog.dismiss()
                 if (teamData != null) {
                     storeTeamDataInSharedPreferences(this@MainActivity,teamData)
@@ -277,7 +277,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onResume() {
         super.onResume()
-        team = getTeamData(this@MainActivity)
+//        team = getTeamData(this@MainActivity)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        deleteTeamDataFromSharedPreferences(this@MainActivity)
     }
 
 

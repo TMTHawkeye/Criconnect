@@ -63,12 +63,19 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
         repository.getSelectedTeam(teamId,callback)
     }
 
-    fun saveMatches(tournamentId: String?, matches: List<MatchModel>, callback: (Boolean) -> Unit){
+    fun saveMatches(tournamentId: String?, matches: List<MatchModel>?, callback: (Boolean, List<MatchModel>) -> Unit){
         repository.saveMatchesToFirebase(tournamentId,matches,callback)
     }
 
     fun updateTeamStats(winnerId: String?, loserId: String?, callback: (Boolean) -> Unit){
         repository.updateTeamStats(winnerId,loserId,callback)
+    }
+
+    fun updateMatch(selectedTournamentId:String?,matchId: String?, winnerId: String?, callback: (Boolean) -> Unit){
+        repository.updateMatchWinner(selectedTournamentId,matchId,winnerId,callback)
+    }
+    fun getAllteamsData(callback: (List<TeamModel>) -> Unit){
+        repository.getAllTeamsFromFirebase(callback)
     }
 
 }

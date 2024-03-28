@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
-    val teamViewModel : TeamViewModel by viewModel()
+    val teamViewModel: TeamViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +42,9 @@ class HomeFragment : Fragment() {
         val adapter = SliderAdapter(requireContext())
         val slideModels = ArrayList<SlideModel>()
 
-        teamViewModel.getTournament {tournamentList->
-            binding.progressBar.visibility=View.VISIBLE
-            if(tournamentList?.size!=0) {
+        teamViewModel.getTournament { tournamentList ->
+            binding.progressBar.visibility = View.VISIBLE
+            if (tournamentList?.size != 0) {
                 tournamentList?.forEach { tournamentItem ->
                     slideModels.add(
                         SlideModel(
@@ -55,15 +55,14 @@ class HomeFragment : Fragment() {
                     )
                     adapter.addItem(tournamentItem)
                 }
-                binding.noDataId.visibility=View.GONE
-                binding.sliderView.visibility=View.VISIBLE
+                binding.noDataId.visibility = View.GONE
+                binding.sliderView.visibility = View.VISIBLE
 
+            } else {
+                binding.sliderView.visibility = View.GONE
+                binding.noDataId.visibility = View.VISIBLE
             }
-            else{
-                binding.sliderView.visibility=View.GONE
-                binding.noDataId.visibility=View.VISIBLE
-            }
-            binding.progressBar.visibility=View.GONE
+            binding.progressBar.visibility = View.GONE
 
         }
         binding.sliderView.setSliderAdapter(adapter)
@@ -75,6 +74,29 @@ class HomeFragment : Fragment() {
         binding.sliderView.setScrollTimeInSec(4)
 
         binding.sliderView.startAutoCycle()
+
+        setProfileInformation()
+    }
+
+    private fun setProfileInformation() {
+        teamViewModel.getTeamData { teamData, isAvailable ->
+            if (isAvailable) {
+                if (teamData != null) {
+                    binding.noDataIdTV.visibility = View.GONE
+                    binding.constrainProfileId.visibility = View.VISIBLE
+                    binding.captionname.text = teamData.captainName + "(Captain)"
+                    binding.wonId.text = teamData.wins.toString()
+                    binding.lossId.text = teamData.loss.toString()
+                    binding.matchesPlayedId.text = (teamData.wins + teamData.loss).toString()
+                } else {
+                    binding.noDataIdTV.visibility = View.VISIBLE
+                    binding.constrainProfileId.visibility = View.GONE
+                }
+            } else {
+                binding.noDataIdTV.visibility = View.VISIBLE
+                binding.constrainProfileId.visibility = View.GONE
+            }
+        }
     }
 
 }

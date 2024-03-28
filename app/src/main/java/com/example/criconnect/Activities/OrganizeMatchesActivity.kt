@@ -31,17 +31,24 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
         setContentView(binding.root)
     }
 
-    fun storeMatchesInDatabase(tournamentId: String?, matches: List<MatchModel>) {
-        dataViewModel.saveMatches(tournamentId,matches){
-            Log.d("matchIdii", "onCreate: ${matches?.get(0)?.teamAId}")
-            setAdapter(matches)
+    fun storeMatchesInDatabase(tournamentId: String?, matches: List<MatchModel>?) {
+        matches.let {matchesList->
+            dataViewModel.saveMatches(tournamentId, matchesList) {isSaved,matchList->
+                Log.d("matchIdii", "onCreate: ${matchList?.get(0)?.matchId}")
+                setAdapter(matchList)
+            }
         }
 
     }
 
-    fun setAdapter(matchesList: List<MatchModel>) {
+    fun setAdapter(matchesList: List<MatchModel>?) {
         var adapter =
-            MatchesAdapter(this@OrganizeMatchesActivity, matchesList) { selectedWinner,selectedLooser, position ->
+            MatchesAdapter(this@OrganizeMatchesActivity, matchesList) { matchId,selectedWinner,selectedLooser ->
+
+                Log.d("TAGlisttttt", "setAdapter: ${matchId} and $selectedTournamentId")
+               /* dataViewModel.updateMatch(selectedTournamentId,matchId,selectedWinner){
+
+                }*/
 
                 dataViewModel.updateTeamStats(selectedWinner, selectedLooser) { success ->
                     if (success) {
@@ -50,41 +57,6 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
                         Toast.makeText(this@OrganizeMatchesActivity, "Failed to update team stats", Toast.LENGTH_SHORT).show()
                     }
                 }
-//                // Update wins count for the corresponding team
-//                if (selectedWinner != null && selectedWinner.isNotEmpty()) {
-//                    matches?.get(position)?.winner = selectedWinner!!
-//                    var newTeam: TeamModel? = null
-//
-//                    for (team in tournamentData?.teamList ?: ArrayList()) {
-//                        if (team.teamId == selectedWinner) {
-//                            newTeam = team
-//                            break
-//                        }
-//                    }
-//
-//                    if (newTeam != null) {
-//                        newTeam?.wins = newTeam.wins + 1
-//                        dataViewModel.saveTeam(newTeam, getDrawable(R.drawable.circlelogo)) {
-//                            if (it) {
-//                                Toast.makeText(
-//                                    this@OrganizeMatchesActivity,
-//                                    "Saved in team",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                            } else {
-//                                Toast.makeText(
-//                                    this@OrganizeMatchesActivity,
-//                                    "Not Saved in team",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//
-//                            }
-//                        }
-//                    }
-//
-//                }
-//
-//                storeMatchesInDatabase(tournamentData?.tournamentId, match\ujes!!)
             }
         binding.matchesRV.apply {
             (getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
@@ -94,9 +66,6 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
         }
 
     }
-
-
-    // Function to distribute matches evenly for each team
 
 
     override fun onResume() {
