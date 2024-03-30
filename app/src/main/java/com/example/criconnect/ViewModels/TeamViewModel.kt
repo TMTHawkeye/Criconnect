@@ -11,70 +11,99 @@ import com.google.firebase.auth.FirebaseUser
 
 class TeamViewModel(val repository: TeamRepository) : ViewModel() {
 
-    fun saveTeam(team: TeamModel?,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
-        repository.addTeamToFirebase(team,selectedDrawable,callback)
+    fun saveTeam(team: TeamModel?, selectedDrawable: Drawable?, callback: (Boolean) -> Unit) {
+        repository.addTeamToFirebase(team, selectedDrawable, callback)
     }
 
-    fun saveTournament(tournament: TournamentData,selectedDrawable: Drawable?,callback:(Boolean)->Unit) {
-        repository.addTournamentToFirebase(tournament,selectedDrawable,callback)
+    fun saveTournament(
+        tournament: TournamentData,
+        selectedDrawable: Drawable?,
+        callback: (Boolean) -> Unit
+    ) {
+        repository.addTournamentToFirebase(tournament, selectedDrawable, callback)
     }
 
-    fun registerTeamInTournament(tournamentId: String?,callback: (Boolean) -> Unit) {
-        repository.registerTeamInTournament(tournamentId,callback)
+    fun registerTeamInTournament(tournamentId: String?, callback: (Boolean) -> Unit) {
+        repository.registerTeamInTournament(tournamentId, callback)
     }
 
-    fun getRegisteredTeamsInTournament(tournamentId: String?,callback: (List<TeamModel>?) -> Unit){
-        repository.getRegisteredTeamsInTournament(tournamentId,callback)
+    fun getRegisteredTeamsInTournament(
+        tournamentId: String?,
+        callback: (List<TeamModel>?) -> Unit
+    ) {
+        repository.getRegisteredTeamsInTournament(tournamentId, callback)
     }
 
-    fun getTournament(callback: (List<TournamentData>?)->Unit){
+    fun getTournament(callback: (List<TournamentData>?) -> Unit) {
         repository.getAllTournamentsFromFirebase(callback)
     }
 
-    fun savePlayer(player : PlayerData, selectedDrawable: Drawable?, callback: (Boolean) -> Unit){
-        repository.addPlayerToTeamFirebase(player,selectedDrawable,callback)
+    fun savePlayer(player: PlayerData, selectedDrawable: Drawable?, callback: (Boolean) -> Unit) {
+        repository.addPlayerToTeamFirebase(player, selectedDrawable, callback)
     }
 
-    fun getPlayersList(callback: (List<PlayerData>?)->Unit){
+    fun getPlayersList(callback: (List<PlayerData>?) -> Unit) {
         repository.getListOfPlayersFromTeam(callback)
     }
 
-    fun getTeamData(callback: (TeamModel?,Boolean) -> Unit){
+    fun getTeamData(callback: (TeamModel?, Boolean) -> Unit) {
         repository.getTeamFromFirebase(callback)
     }
 
-    fun storeMatchesinFirebase(tournamentId: String?,matches: List<MatchModel>, callback: (Boolean) -> Unit){
-        repository.storeMatchesInDatabase(tournamentId,matches,callback)
+    fun storeMatchesinFirebase(
+        tournamentId: String?,
+        matches: List<MatchModel>,
+        callback: (Boolean) -> Unit
+    ) {
+        repository.storeMatchesInDatabase(tournamentId, matches, callback)
     }
 
-    fun getMatchesForTournament(tournamentId: String?,callback: (List<MatchModel>?) -> Unit){
-        repository.getMatchesForTournament(tournamentId,callback)
+    fun getMatchesForTournament(tournamentId: String?, callback: (List<MatchModel>?) -> Unit) {
+        repository.getMatchesForTournament(tournamentId, callback)
     }
 
-    fun getLoggedInUser() : FirebaseUser?{
-       return repository.getLoggedInUser()
+    fun getAllMatchesFromAllTournaents(callback: (List<MatchModel>?) -> Unit) {
+        repository.getAllMatchesFromAllTournaments( callback)
     }
 
-    fun deletePlayerFromTeam(playerId:String?,callback: (Boolean) -> Unit){
-        repository.deletePlayerFromTeam(playerId,callback)
+    fun getLoggedInUser(): FirebaseUser? {
+        return repository.getLoggedInUser()
     }
 
-    fun getSelectedTeamDetails(teamId: String?, callback: (TeamModel?)->Unit){
-        repository.getSelectedTeam(teamId,callback)
+    fun deletePlayerFromTeam(playerId: String?, callback: (Boolean) -> Unit) {
+        repository.deletePlayerFromTeam(playerId, callback)
     }
 
-    fun saveMatches(tournamentId: String?, matches: List<MatchModel>?, callback: (Boolean, List<MatchModel>) -> Unit){
-        repository.saveMatchesToFirebase(tournamentId,matches,callback)
+    fun getSelectedTeamDetails(teamId: String?, callback: (TeamModel?) -> Unit) {
+        repository.getSelectedTeam(teamId, callback)
     }
 
-    fun updateTeamStats(winnerId: String?, loserId: String?, callback: (Boolean) -> Unit){
-        repository.updateTeamStats(winnerId,loserId,callback)
+    fun saveMatches(
+        tournamentId: String?,
+        matches: List<MatchModel>?,
+        callback: (Boolean, List<MatchModel>) -> Unit
+    ) {
+        repository.saveMatchesToFirebase(tournamentId, matches, callback)
     }
 
-    fun updateMatch(selectedTournamentId:String?,matchId: String?, winnerId: String?, callback: (Boolean) -> Unit){
-        repository.updateMatchWinner(selectedTournamentId,matchId,winnerId,callback)
+    fun updateTeamStats(winnerId: String?, loserId: String?, callback: (Boolean) -> Unit) {
+        repository.updateTeamStats(winnerId, loserId, callback)
     }
-    fun getAllteamsData(callback: (List<TeamModel>) -> Unit){
+
+    /* fun updateMatch(selectedTournamentId:String?,matchId: String?, winnerId: String?, callback: (Boolean) -> Unit){
+         repository.updateMatchWinner(selectedTournamentId,matchId,winnerId,callback)
+     }*/
+
+    fun updateMatch(
+        tournamentId: String?,
+        matchIdToUpdate: String?,
+        updatedMatch: MatchModel?,
+        callback: (Boolean) -> Unit
+    ) {
+        repository.updateMatchInFirebase(tournamentId,matchIdToUpdate,updatedMatch,callback)
+    }
+
+    fun getAllteamsData(callback: (List<TeamModel>) -> Unit) {
         repository.getAllTeamsFromFirebase(callback)
     }
 

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import java.io.Serializable
 
 data class TournamentData(
+    var tournamentOwnerTeam : String?=null,
     var tournamentId : String?=null,
     var tournamentLogo : String?=null,
     val tournamentName : String?="",

@@ -44,31 +44,6 @@ class TournamentDataActivity : AppCompatActivity() {
         getTournamentsFromDatabase(dialog)
 
 
-//        androidData = DataClass("Team XI", R.string.camera, "RaceCourse", R.drawable.imageupdated10)
-//        dataList.add(androidData!!)
-//
-//        androidData = DataClass(
-//            " Heroes Cup",
-//            R.string.recyclerview,
-//            "Pindi Stadium",
-//            R.drawable.imageupdated1
-//        )
-//        dataList.add(androidData!!)
-//
-//        androidData =
-//            DataClass("Night Cricket Trophy", R.string.date, "f9 park", R.drawable.imageupdated2)
-//        dataList.add(androidData!!)
-//
-//        androidData =
-//            DataClass("Champions League", R.string.edit, "Ayub Stadium", R.drawable.iamgeupdated3)
-//        dataList.add(androidData!!)
-//
-//        androidData =
-//            DataClass(" Hometown Cup", R.string.rating, "I-8 Ground", R.drawable.imageupdated5)
-//        dataList.add(androidData!!)
-//
-//        setAdapter()
-
     }
 
     fun getTournamentsFromDatabase(dialog: ProgressDialog) {
@@ -92,15 +67,19 @@ class TournamentDataActivity : AppCompatActivity() {
 
     private fun searchList(text: String) {
         val dataSearchList: MutableList<TournamentData> = ArrayList()
-        for (data in dataList!!) {
-            if (data.tournamentName?.toLowerCase()!!.contains(text.lowercase(Locale.getDefault()))) {
-                dataSearchList.add(data)
+        dataList?.let {
+            for (data in it) {
+                if (data.tournamentName?.toLowerCase()!!
+                        .contains(text.lowercase(Locale.getDefault()))
+                ) {
+                    dataSearchList.add(data)
+                }
             }
-        }
-        if (dataSearchList.isEmpty()) {
-            Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT).show()
-        } else {
-            adapter!!.setSearchList(dataSearchList)
+            if (dataSearchList.isEmpty()) {
+                Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT).show()
+            } else {
+                adapter!!.setSearchList(dataSearchList)
+            }
         }
     }
 }

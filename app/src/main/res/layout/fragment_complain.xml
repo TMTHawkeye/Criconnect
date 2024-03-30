@@ -34,7 +34,20 @@
             android:id="@+id/recyclerView"
             android:scrollbars="vertical"/>
 
+        <ProgressBar
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerInParent="true"/>
 
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noDataTV"
+            android:text="@string/noDatafound"
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 

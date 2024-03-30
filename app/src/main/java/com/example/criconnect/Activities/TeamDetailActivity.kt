@@ -103,5 +103,11 @@ class TeamDetailActivity : AppCompatActivity(), PlayerListner {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(applicationContext).clear(binding.profilePhotoId)
+    }
+
+
 
 }

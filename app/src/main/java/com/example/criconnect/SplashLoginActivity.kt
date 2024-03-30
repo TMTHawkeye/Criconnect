@@ -4,10 +4,12 @@ package com.example.criconnect
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.text.method.PasswordTransformationMethod
+ import android.text.method.HideReturnsTransformationMethod
+ import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.util.Patterns
-import android.view.View
+ import android.view.MotionEvent
+ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,30 +28,12 @@ class SplashLoginActivity : AppCompatActivity() {
     private var authProfile: FirebaseAuth? = null
     private val TAG = "LoginActivity"
 
-    val dataViewModel: TeamViewModel by viewModel()
     private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        authProfile = FirebaseAuth.getInstance()
-
-        binding.imageViewVisibility.setOnClickListener(View.OnClickListener { // Toggle password visibility
-            if (isPasswordVisible) {
-                // Hide password
-                binding.editTextLoginPwd.setTransformationMethod(PasswordTransformationMethod.getInstance())
-                binding.imageViewVisibility.setImageResource(R.drawable.ic_baseline_visibility_off_24)
-            } else {
-                // Show password
-                binding.editTextLoginPwd.setTransformationMethod(null)
-                binding.imageViewVisibility.setImageResource(R.drawable.ic_baseline_visibility_24)
-            }
-            isPasswordVisible = !isPasswordVisible
-            // Move cursor to the end of the text
-            binding.editTextLoginPwd.setSelection(binding.editTextLoginPwd.getText().length)
-        })
 
         binding.tvForgotPassword.setOnClickListener {
             Toast.makeText(
@@ -61,23 +45,18 @@ class SplashLoginActivity : AppCompatActivity() {
             startActivity(Intent(this@SplashLoginActivity, ForgetPasswordActivity::class.java))
         }
 
+        binding.editTextLoginPwd.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                // Check if the click is within the drawable end bounds
+                if (event.rawX >= (binding.editTextLoginPwd.right - binding.editTextLoginPwd.compoundDrawables[2].bounds.width())) {
+                    togglePasswordVisibility()
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
+        }
 
-//         Show hide password using eye icon
 
-//        ImageView imageViewShowHidePwd = findViewById(R.id.imageView_show_hide_pwd);
-//        imageViewShowHidePwd.setImageResource(R.drawable.baseline_visibility_off_24);
-//        imageViewShowHidePwd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(editTextLoginPwd.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
-//                    editTextLoginPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//                    imageViewShowHidePwd.setImageResource(R.drawable.baseline_visibility_off_24);
-//                }else{
-//                    editTextLoginPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-//                    imageViewShowHidePwd.setImageResource(R.drawable.ic_baseline_visibility_24);
-//                }
-//            }
-//        });
         binding.tvLoginbutton.setOnClickListener {
             val textEmail: String = binding.editTextLoginEmail.getText().toString()
             val textPwd: String = binding.editTextLoginPwd.getText().toString()
@@ -121,53 +100,20 @@ class SplashLoginActivity : AppCompatActivity() {
         })
     }
 
-    /*
-        private fun loginUser(email: String, pwd: String) {
-            authProfile?.signInWithEmailAndPassword(email, pwd)
-                ?.addOnCompleteListener(object : OnCompleteListener<AuthResult?> {
-                    override fun onComplete(task: Task<AuthResult?>) {
-                        if (task.isSuccessful()) {
-                             val firebaseUser: FirebaseUser = authProfile?.getCurrentUser()!!
-                            //check if email is verified before user can access their profile
-                            if (firebaseUser.isEmailVerified()) {
-    //                            Toast.makeText(
-    //                                this@SplashLoginActivity,
-    //                                "You are logged in now",
-    //                                Toast.LENGTH_SHORT
-    //                            ).show()
-
-                                val sharedPreferences = getSharedPreferences("YOUR_PREFERENCE_NAME", Context.MODE_PRIVATE)
-                                val editor = sharedPreferences.edit()
-                                editor.putString("USER_UUID", firebaseUser.uid)
-                                editor.apply()
-
-                                startActivity(Intent(this@SplashLoginActivity, MainActivity::class.java))
-                                finish()
-                            } //open user profile
-                            else {
-                                firebaseUser.sendEmailVerification()
-                                authProfile!!.signOut() //sign out user
-                                showAlertDialog()
-                            }
-                        } else {
-                            try {
-                                throw task.getException()!!
-                            } catch (e: FirebaseAuthInvalidUserException) {
-                                binding.editTextLoginEmail.setError("User does not exists or is no longer valid.please register again.")
-                                binding.editTextLoginEmail.requestFocus()
-                            } catch (e: FirebaseAuthInvalidCredentialsException) {
-                                binding.editTextLoginEmail.setError("invalid credentials. Kindly check and reenter")
-                                binding.editTextLoginEmail.requestFocus()
-                            } catch (e: Exception) {
-                                Log.e("TAG", e.message!!)
-                                Toast.makeText(this@SplashLoginActivity, e.message, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        binding.progressBar.setVisibility(View.GONE)
-                    }
-                })
+    private fun togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            // Password is visible, hide it
+            binding.editTextLoginPwd.transformationMethod = PasswordTransformationMethod.getInstance()
+            isPasswordVisible = false
+        } else {
+            // Password is hidden, show it
+            binding.editTextLoginPwd.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            isPasswordVisible = true
         }
-    */
+        // Move cursor to the end of the text
+        binding.editTextLoginPwd.setSelection(binding.editTextLoginPwd.text.length)
+    }
+
 
     private fun loginUser(email: String, pwd: String) {
         binding.progressBar.visibility = View.VISIBLE
@@ -190,10 +136,13 @@ class SplashLoginActivity : AppCompatActivity() {
                     showAlertDialog()
                 }
             }
+            else{
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@SplashLoginActivity, "Unknown error occured, Please try again or create account!", Toast.LENGTH_SHORT).show()
+            }
 
         } catch (e: Exception) {
-            // Handle exceptions here
-            Log.e(TAG, "Login failed: ${e.message}")
+             Log.e(TAG, "Login failed: ${e.message}")
             binding.progressBar.visibility = View.GONE
             Toast.makeText(
                 this@SplashLoginActivity,
@@ -224,13 +173,10 @@ class SplashLoginActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    suspend fun saveRegisteredState(isRegistered: Boolean, context: Context) {
-        withContext(Dispatchers.IO) {
-            val sharedPreferences =
-                context.getSharedPreferences("USERPREFERENCE", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("isTeamRegistered", isRegistered)
-            editor.apply()
-        }
+    override fun onResume() {
+        super.onResume()
+        authProfile = FirebaseAuth.getInstance()
+
     }
+
 }

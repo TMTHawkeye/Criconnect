@@ -21,7 +21,7 @@
         android:icon="@drawable/baseline_subscriptions_24" />
     <item
         android:id="@+id/library"
-        android:title="Setting"
-        android:icon="@drawable/baseline_video_library_24" />
+        android:title="Profile"
+        android:icon="@drawable/user_img_icon" />
 
 </menu>

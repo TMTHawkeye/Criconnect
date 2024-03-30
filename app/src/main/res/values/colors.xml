@@ -22,4 +22,6 @@
     <color name="special1">#5E9299</color>
     <color name="special">#290907</color>
     <color name="dark_red">#8692f7</color>
+    <color name="transparent">#00FFFFFF</color>
+
 </resources>

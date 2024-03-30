@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.criconnect.Activities.TournamentDataActivity
@@ -18,6 +19,9 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 
 class HomeFragment : Fragment() {
@@ -55,12 +59,12 @@ class HomeFragment : Fragment() {
                     )
                     adapter.addItem(tournamentItem)
                 }
-                binding.noDataId.visibility = View.GONE
+                 binding.noDataIdTVTournament.visibility = View.GONE
                 binding.sliderView.visibility = View.VISIBLE
 
             } else {
                 binding.sliderView.visibility = View.GONE
-                binding.noDataId.visibility = View.VISIBLE
+                 binding.noDataIdTVTournament.visibility = View.VISIBLE
             }
             binding.progressBar.visibility = View.GONE
 
@@ -69,13 +73,39 @@ class HomeFragment : Fragment() {
         binding.sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM)
         binding.sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
         binding.sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_RTL)
-        binding.sliderView.setIndicatorSelectedColor(requireContext().getColor(R.color.dark_red))
+        binding.sliderView.setIndicatorSelectedColor(requireContext().getColor(R.color.colorAccent))
         binding.sliderView.setIndicatorUnselectedColor(Color.GRAY)
         binding.sliderView.setScrollTimeInSec(4)
 
         binding.sliderView.startAutoCycle()
 
         setProfileInformation()
+
+        val config = ShowcaseConfig()
+        val sequence = MaterialShowcaseSequence(requireActivity(), getString(R.string.tournament))
+
+//        if(binding.btnOrganizeMatches.isVisible) {
+        sequence.addSequenceItem(
+            MaterialShowcaseView.Builder(requireActivity())
+                .setTarget(binding.cardSlider)
+                .setContentText(getString(R.string.tournamentsDesc))
+                .setDismissText(getString(R.string.got_it))
+                .setMaskColour(requireContext().getColor(R.color.colorAccent))
+                .build()
+        )
+//        }
+//        if(binding.registerTeamId.isVisible) {
+        sequence.addSequenceItem(
+            MaterialShowcaseView.Builder(requireActivity())
+                .setTarget(binding.constrainProfileId)
+                .setContentText(getString(R.string.profileDesc))
+                .setDismissText(getString(R.string.got_it))
+                .setMaskColour(requireContext().getColor(R.color.colorAccent))
+                .build()
+        )
+//        }
+
+        sequence.start()
     }
 
     private fun setProfileInformation() {
@@ -98,5 +128,8 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+
+
 
 }

@@ -38,7 +38,6 @@ class TeamRepository(val context: Context) {
 
     fun getDatabaseReference() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase?.setPersistenceEnabled(true);
         databaseReference = firebaseDatabase?.getReference("TeamManagement");
 
 
@@ -74,10 +73,26 @@ class TeamRepository(val context: Context) {
                     val teamAId = matchData?.get("teamAId") as? String ?: ""
                     val teamBId = matchData?.get("teamBId") as? String ?: ""
                     val winnerId = matchData?.get("winnerId") as? String ?: ""
+                    val looserId = matchData?.get("looserId") as? String ?: ""
+                    val wonbyTeam = matchData?.get("winnerTeamWonby") as? String ?: ""
                     val startDate = matchData?.get("startDate") as? String ?: ""
+                    val oversFormat = matchData?.get("oversFormat") as? String ?: ""
+                    val playerofMatch = matchData?.get("playerOfMatch") as? String ?: ""
+                    val completeStatus = matchData?.get("completeStatus") as? Boolean ?: false
 
                     val matchModel =
-                        MatchModel(matchId ?: "", teamAId, teamBId, winnerId, startDate)
+                        MatchModel(
+                            matchId ?: "",
+                            teamAId = teamAId,
+                            teamBId = teamBId,
+                            winnerId = winnerId,
+                            looserId=looserId,
+                            startDate = startDate,
+                            completeStatus = completeStatus,
+                            winnerTeamWonby = wonbyTeam,
+                            oversFormat = oversFormat,
+                            playerOfMatch = playerofMatch
+                        )
                     matches.add(matchModel)
                 }
 
@@ -130,6 +145,7 @@ class TeamRepository(val context: Context) {
                         "tournamentEntryFee" to tournament.tournamentEntryFee,
                         "tournamentWinningPrize" to tournament.tournamentWinningPrize,
                         "tournamentLogo" to downloadUrl,
+                        "tournamentOwnerTeam" to tournament.tournamentOwnerTeam,
                         "teams" to tournament.teamList
                     )
 
@@ -146,6 +162,39 @@ class TeamRepository(val context: Context) {
                 }
             }
         }
+    }
+
+
+    fun getAllMatchesFromAllTournaments(callback: (List<MatchModel>?) -> Unit) {
+        val allMatches = mutableListOf<MatchModel>()
+
+        // Fetch all tournaments
+        firebaseDatabase?.getReference("TournamentManagement")?.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Iterate through each tournament
+                    for (tournamentSnapshot in dataSnapshot.children) {
+                        val tournamentId = tournamentSnapshot.key
+                        // Fetch matches for the current tournament
+                        tournamentId?.let { id ->
+                            getMatchesForTournament(id) { matches ->
+                                matches?.let {
+                                    allMatches.addAll(it)
+                                    // Check if all matches from all tournaments have been fetched
+//                                    if (allMatches.size == dataSnapshot.childrenCount.toInt()) {
+                                        callback.invoke(allMatches)
+//                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.invoke(null)
+                }
+            }
+        )
     }
 
 
@@ -511,7 +560,7 @@ class TeamRepository(val context: Context) {
                             val city = teamData["city"] as? String ?: ""
                             val homeGround = teamData["homeGround"] as? String ?: ""
                             val teamLogo = teamData["teamLogo"] as String ?: ""
-                            val wins = (teamData["wins"] as? Long?)?.toInt()?: 0
+                            val wins = (teamData["wins"] as? Long?)?.toInt() ?: 0
                             val loss = (teamData["loss"] as? Long?)?.toInt() ?: 0
 
                             val team = TeamModel(
@@ -720,7 +769,7 @@ class TeamRepository(val context: Context) {
 
     fun getSelectedTeam(teamId: String?, callback: (TeamModel?) -> Unit) {
         // Reference to the specific team in the TeamManagement node
-        val teamRef = firebaseDatabase?.getReference("TeamManagement")?.child(teamId ?: "")
+        val teamRef = firebaseDatabase?.getReference("TeamManagement")?.child("$teamId")
 
         // Check if the teamRef is not null and the teamId is not null or empty
         if (teamRef != null && !teamId.isNullOrEmpty()) {
@@ -752,48 +801,48 @@ class TeamRepository(val context: Context) {
         }
     }
 
-   /* fun saveMatchesToFirebase(
-        tournamentId: String?,
-        matches: List<MatchModel>?,
-        callback: (Boolean) -> Unit
-    ) {
-        val tournamentMatchesRef =
-            firebaseDatabase?.getReference("TournamentMatches")?.child("$tournamentId")
-                ?.child("matches")
+    /* fun saveMatchesToFirebase(
+         tournamentId: String?,
+         matches: List<MatchModel>?,
+         callback: (Boolean) -> Unit
+     ) {
+         val tournamentMatchesRef =
+             firebaseDatabase?.getReference("TournamentMatches")?.child("$tournamentId")
+                 ?.child("matches")
 
-        // Counter to keep track of successful match saves
-        var savedCount = 0
-        var matchesReturnedList = ArrayList<MatchModel>()
+         // Counter to keep track of successful match saves
+         var savedCount = 0
+         var matchesReturnedList = ArrayList<MatchModel>()
 
-        matches?.forEachIndexed { index, match ->
-            // Generate a unique match ID
-            val matchId = generateUniqueMatchId()
+         matches?.forEachIndexed { index, match ->
+             // Generate a unique match ID
+             val matchId = generateUniqueMatchId()
 
-            // Create a map with match data
-            val matchData = mapOf(
-                "teamAId" to match.teamAId,
-                "teamBId" to match.teamBId,
-                "winnerId" to match.winnerId,
-                "startDate" to match.startDate,
-                "matchId" to matchId
-            )
+             // Create a map with match data
+             val matchData = mapOf(
+                 "teamAId" to match.teamAId,
+                 "teamBId" to match.teamBId,
+                 "winnerId" to match.winnerId,
+                 "startDate" to match.startDate,
+                 "matchId" to matchId
+             )
 
-            // Save match data to Firebase
-            tournamentMatchesRef?.child(matchId)?.setValue(matchData)
-                ?.addOnSuccessListener {
-                    savedCount++
+             // Save match data to Firebase
+             tournamentMatchesRef?.child(matchId)?.setValue(matchData)
+                 ?.addOnSuccessListener {
+                     savedCount++
 
-                    // Check if all matches were saved successfully
-                    if (savedCount == matches?.size) {
-                        callback.invoke(false) // All matches saved successfully
-                    }
-                }
-                ?.addOnFailureListener {
-                    callback.invoke(false) // Failed to save matches
-                }
-        }
-    }
-*/
+                     // Check if all matches were saved successfully
+                     if (savedCount == matches?.size) {
+                         callback.invoke(false) // All matches saved successfully
+                     }
+                 }
+                 ?.addOnFailureListener {
+                     callback.invoke(false) // Failed to save matches
+                 }
+         }
+     }
+ */
 
     fun saveMatchesToFirebase(
         tournamentId: String?,
@@ -823,7 +872,11 @@ class TeamRepository(val context: Context) {
                 "teamBId" to match.teamBId,
                 "winnerId" to match.winnerId,
                 "startDate" to match.startDate,
-                "matchId" to matchId
+                "matchId" to matchId,
+                "completeStatus" to match.completeStatus,
+                "playerOfMatch" to match.playerOfMatch,
+                "winnerTeamWonby" to match.winnerTeamWonby,
+                "oversFormat" to match.oversFormat
             )
 
             // Save match data to Firebase
@@ -843,6 +896,46 @@ class TeamRepository(val context: Context) {
         }
     }
 
+    fun updateMatchInFirebase(
+        tournamentId: String?,
+        matchIdToUpdate: String?,
+        updatedMatch: MatchModel?,
+        callback: (Boolean) -> Unit
+    ) {
+        val tournamentMatchesRef =
+            firebaseDatabase?.getReference("TournamentMatches")?.child("$tournamentId")
+                ?.child("matches")
+
+        if (tournamentMatchesRef == null || matchIdToUpdate == null || updatedMatch == null) {
+            // Error: Null reference or missing parameters
+            callback.invoke(false)
+            return
+        }
+
+        // Create a map with updated match data
+        val updatedMatchData = mapOf(
+            "teamAId" to updatedMatch.teamAId,
+            "teamBId" to updatedMatch.teamBId,
+            "winnerId" to updatedMatch.winnerId,
+            "startDate" to updatedMatch.startDate,
+            "matchId" to matchIdToUpdate,
+            "completeStatus" to updatedMatch.completeStatus,
+            "playerOfMatch" to updatedMatch.playerOfMatch,
+            "winnerTeamWonby" to updatedMatch.winnerTeamWonby,
+            "oversFormat" to updatedMatch.oversFormat
+        )
+
+        // Update match data in Firebase
+        tournamentMatchesRef.child(matchIdToUpdate).updateChildren(updatedMatchData)
+            .addOnSuccessListener {
+                callback.invoke(true) // Match updated successfully
+            }
+            .addOnFailureListener {
+                callback.invoke(false) // Failed to update match
+            }
+    }
+
+
     fun updateMatchWinner(
         tournamentId: String?,
         matchId: String?,
@@ -856,7 +949,8 @@ class TeamRepository(val context: Context) {
         }
 
         val tournamentMatchesRef =
-            firebaseDatabase?.getReference("TournamentMatches")?.child(tournamentId)?.child("matches")
+            firebaseDatabase?.getReference("TournamentMatches")?.child(tournamentId)
+                ?.child("matches")
                 ?.child(matchId)
 
         if (tournamentMatchesRef == null) {
@@ -975,7 +1069,16 @@ class TeamRepository(val context: Context) {
                     val wins = teamData["wins"] as Long
                     val loss = teamData["loss"] as Long
 
-                    val team = TeamModel(teamId=teamId,teamName= teamName, captainName =  captainName, city =  city, homeGround =  homeGround,teamLogo= teamLogo, wins = wins.toInt(),loss= loss.toInt())
+                    val team = TeamModel(
+                        teamId = teamId,
+                        teamName = teamName,
+                        captainName = captainName,
+                        city = city,
+                        homeGround = homeGround,
+                        teamLogo = teamLogo,
+                        wins = wins.toInt(),
+                        loss = loss.toInt()
+                    )
                     teams.add(team)
                 }
                 callback.invoke(teams)

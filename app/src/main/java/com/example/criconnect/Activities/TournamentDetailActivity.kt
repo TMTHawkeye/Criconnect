@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -19,6 +20,9 @@ import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityTournamentDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 import java.io.Serializable
 
 class TournamentDetailActivity : AppCompatActivity(), Serializable {
@@ -36,10 +40,6 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
         if (selectedTournament != null) {
             setTournamentAttributes()
             getRegisteredTeamsInTournament()
-            if(selectedTournament?.teamList?.size!!>12){
-                binding.btnOrganizeMatches.visibility=View.GONE
-                binding.registerTeamId.visibility=View.GONE
-            }
         }
         else{
             Toast.makeText(this@TournamentDetailActivity, "No data Found", Toast.LENGTH_SHORT).show()
@@ -49,7 +49,6 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
         }
 
         binding.registerTeamId.setOnClickListener {
-
             registerTeam()
         }
 
@@ -58,10 +57,42 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
             startActivity(
                 Intent(this@TournamentDetailActivity, OrganizeMatchesActivity::class.java)
                     .putExtra("selectedTournament", selectedTournament?.tournamentId)
+                    .putExtra("tournamentOwnerID", selectedTournament?.tournamentOwnerTeam)
                     .putExtra("tournamentName",selectedTournament?.tournamentName)
             )
 
         }
+
+        binding.backbtnId.setOnClickListener {
+            finish()
+        }
+
+
+        val config = ShowcaseConfig()
+        val sequence = MaterialShowcaseSequence(this@TournamentDetailActivity, getString(R.string.matches))
+
+//        if(binding.btnOrganizeMatches.isVisible) {
+            sequence.addSequenceItem(
+                MaterialShowcaseView.Builder(this@TournamentDetailActivity)
+                    .setTarget(binding.btnOrganizeMatches)
+                    .setContentText(getString(R.string.matches_button_showcase_value))
+                    .setDismissText(getString(R.string.got_it))
+                    .setMaskColour(getColor(R.color.dark_red))
+                    .build()
+            )
+//        }
+//        if(binding.registerTeamId.isVisible) {
+            sequence.addSequenceItem(
+                MaterialShowcaseView.Builder(this@TournamentDetailActivity)
+                    .setTarget(binding.registerTeamId)
+                    .setContentText(getString(R.string.registerDetails))
+                    .setDismissText(getString(R.string.got_it))
+                    .setMaskColour(getColor(R.color.dark_red))
+                    .build()
+            )
+//        }
+
+        sequence.start()
     }
 
     private fun setTournamentAttributes() {
@@ -112,9 +143,11 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
             } else {
                 Toast.makeText(
                     this@TournamentDetailActivity,
-                    "Unable to register, Tryagain!",
+                    "Unable to register, Tryagain or create a team first!",
                     Toast.LENGTH_SHORT
                 ).show()
+
+                binding.progressBar.visibility=View.GONE
             }
         }
     }
@@ -123,13 +156,21 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
         val user = dataViewModel.getLoggedInUser()
         dataViewModel.getRegisteredTeamsInTournament(selectedTournament?.tournamentId) { listTeam ->
             if (listTeam?.size != 0) {
-                listTeam?.forEach {
-                    if (it.teamId.equals(user?.uid) || listTeam.size > 12) {
-                        binding.registerTeamId.visibility = View.GONE
-                    }
+                val isTeamIdMatched = listTeam?.any { it.teamId == user?.uid }?:false
+                val isListTeamSizeGreaterThanTwelve = listTeam?.size ?: 0 > 12
+
+                if (isTeamIdMatched || isListTeamSizeGreaterThanTwelve) {
+                    binding.registerTeamId.visibility = View.GONE
+                } else {
+                    binding.registerTeamId.visibility = View.VISIBLE
                 }
+
                 if (listTeam?.size!! < 3 || listTeam?.size!! > 12) {
                     binding.btnOrganizeMatches.visibility = View.GONE
+                }
+                else{
+                    binding.btnOrganizeMatches.visibility = View.VISIBLE
+
                 }
                 setAdapter(listTeam)
 
@@ -139,12 +180,19 @@ class TournamentDetailActivity : AppCompatActivity(), Serializable {
                 binding.registerTeamId.visibility = View.VISIBLE
             }
         }
+
+
     }
 
     fun setAdapter(teamsList: List<TeamModel>?) {
         binding.teamsRV.visibility=View.VISIBLE
         binding.teamsRV.layoutManager = LinearLayoutManager(this@TournamentDetailActivity)
         binding.teamsRV.adapter = RegisteredTeamsAdapter(this@TournamentDetailActivity, teamsList,selectedTournament?.tournamentId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(applicationContext).clear(binding.tournamentImageId)
     }
 
 

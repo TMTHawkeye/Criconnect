@@ -48,4 +48,9 @@ class PlayerDetailsActivity : AppCompatActivity() {
             .apply(options)
             .into(binding.profilePhotoId)
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(applicationContext).clear(binding.profilePhotoId)
+    }
+
 }

@@ -54,7 +54,7 @@ class SliderAdapter(context: Context) :
 
     override fun onBindViewHolder(viewHolder: SliderAdapterVH, position: Int) {
         val sliderItem: TournamentData = mSliderItems[position]
-        viewHolder.binding.tournamentNameId.text = sliderItem.tournamentName
+//        viewHolder.binding.tournamentNameId.text = sliderItem.tournamentName
 
         loadImage(position,viewHolder)
 

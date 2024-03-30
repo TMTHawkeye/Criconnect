@@ -2,16 +2,15 @@ package com.example.criconnect.Activities
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.bumptech.glide.Glide
 import com.example.criconnect.Adapters.MatchesAdapter
 import com.example.criconnect.HelperClasses.Constants.generateMatches
 import com.example.criconnect.ModelClasses.MatchModel
-import com.example.criconnect.ModelClasses.TeamModel
-import com.example.criconnect.ModelClasses.TournamentData
-import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,8 +21,10 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityOrganizeMatchesBinding
     val dataViewModel: TeamViewModel by viewModel()
     var selectedTournamentId: String? = null
+    var selectedTournamentOwnerName: String? = null
     var selectedTournamentName: String? = null
     var matches: List<MatchModel>? = null
+    var isOwner = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +33,8 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     }
 
     fun storeMatchesInDatabase(tournamentId: String?, matches: List<MatchModel>?) {
-        matches.let {matchesList->
-            dataViewModel.saveMatches(tournamentId, matchesList) {isSaved,matchList->
+        matches.let { matchesList ->
+            dataViewModel.saveMatches(tournamentId, matchesList) { isSaved, matchList ->
                 Log.d("matchIdii", "onCreate: ${matchList?.get(0)?.matchId}")
                 setAdapter(matchList)
             }
@@ -42,27 +43,29 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     }
 
     fun setAdapter(matchesList: List<MatchModel>?) {
+        for (i in matchesList!!) {
+            Log.d("TAGlisttttt", "setAdapter: ${i.completeStatus}")
+
+        }
+
         var adapter =
-            MatchesAdapter(this@OrganizeMatchesActivity, matchesList) { matchId,selectedWinner,selectedLooser ->
+            MatchesAdapter(
+                this@OrganizeMatchesActivity,
+                matchesList,
+                selectedTournamentId,
+                selectedTournamentOwnerName,
+                isOwner
+            )
 
-                Log.d("TAGlisttttt", "setAdapter: ${matchId} and $selectedTournamentId")
-               /* dataViewModel.updateMatch(selectedTournamentId,matchId,selectedWinner){
-
-                }*/
-
-                dataViewModel.updateTeamStats(selectedWinner, selectedLooser) { success ->
-                    if (success) {
-                        Toast.makeText(this@OrganizeMatchesActivity, "Team stats updated successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@OrganizeMatchesActivity, "Failed to update team stats", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
         binding.matchesRV.apply {
-            (getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
+//            (getItemAnimator() as SimpleItemAnimator).supportsChangeAnimations = false
             this.layoutManager = LinearLayoutManager(this@OrganizeMatchesActivity)
             this.adapter = adapter
-            setHasFixedSize(true)
+//            setHasFixedSize(true)
+        }
+
+        binding.backbtnId.setOnClickListener {
+            finish()
         }
 
     }
@@ -71,16 +74,24 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     override fun onResume() {
         super.onResume()
         selectedTournamentId = intent?.getStringExtra("selectedTournament")
-        selectedTournamentName= intent?.getStringExtra("tournamentName")
-        binding.titleTournament.text=selectedTournamentName
+        selectedTournamentOwnerName = intent?.getStringExtra("tournamentOwnerID")
+        selectedTournamentName = intent?.getStringExtra("tournamentName")
+        binding.titleTournament.text = selectedTournamentName
+
+        binding.progressBar.visibility= View.VISIBLE
+
+        if (selectedTournamentOwnerName?.equals(dataViewModel.getLoggedInUser()?.uid) == true) {
+            isOwner = true
+        } else {
+            isOwner=false
+        }
 
         dataViewModel.getMatchesForTournament(selectedTournamentId) { existingMatches ->
-            if (existingMatches?.size==0) {
+            if (existingMatches?.size == 0) {
                 dataViewModel.getRegisteredTeamsInTournament(selectedTournamentId) { registeredTeams ->
                     matches = generateMatches(registeredTeams)
                     matches?.let {
                         storeMatchesInDatabase(selectedTournamentId, it)
-                        setAdapter(it)
                     }
                 }
             } else {
@@ -89,10 +100,10 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
                     setAdapter(it)
                 }
             }
+            binding.progressBar.visibility= View.GONE
+
         }
     }
-
-
 
 
 }

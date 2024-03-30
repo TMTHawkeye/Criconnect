@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MatchSummaryActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrain_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backbtn_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_15sdp"
+            android:src="@drawable/back_img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/title_summary"
+            style="@style/textStyle_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Match Summary"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/backbtn_id"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/backbtn_id" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/winner_id"
+        style="@style/textStyle_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_15sdp"
+        android:text="No Team Name Found"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constrain_header" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profilePhoto_id"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginVertical="30dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/uploadimg"
+        app:layout_constraintBottom_toTopOf="@+id/POM_id"
+        app:layout_constraintEnd_toEndOf="@+id/winner_id"
+        app:layout_constraintStart_toStartOf="@+id/winner_id"
+        app:layout_constraintTop_toBottomOf="@+id/winner_id"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
+
+
+    <TextView
+        android:id="@+id/POM_id"
+        style="@style/textStyle_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_15sdp"
+        android:text="Player of the Match"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profilePhoto_id" />
+
+    <Spinner
+        android:id="@+id/POM_spinner_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_15sdp"
+        app:layout_constraintEnd_toEndOf="@+id/POM_id"
+        app:layout_constraintStart_toStartOf="@id/POM_id"
+        app:layout_constraintTop_toBottomOf="@id/POM_id" />
+
+    <TextView
+        android:id="@+id/wonById"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Won by"
+        style="@style/textStyle_header"
+        app:layout_constraintStart_toStartOf="@id/POM_id"
+        app:layout_constraintTop_toBottomOf="@id/POM_spinner_id"
+        android:layout_marginTop="@dimen/_15sdp"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/wonByValue_id"
+        android:layout_width="0dp"
+        android:background="@null"
+        android:hint="Enter value here"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_50sdp"
+         app:layout_constraintTop_toTopOf="@+id/wonById"
+        app:layout_constraintBottom_toBottomOf="@+id/wonById"
+        android:layout_marginStart="@dimen/_15sdp"/>
+
+    <TextView
+        android:id="@+id/oversFormatId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overs Format"
+        style="@style/textStyle_header"
+        app:layout_constraintStart_toStartOf="@id/wonById"
+        app:layout_constraintTop_toBottomOf="@id/wonById"
+        android:layout_marginTop="@dimen/_15sdp"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/oversFormatvalueId"
+        android:layout_width="0dp"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_50sdp"
+        android:hint="Enter value here"
+        android:inputType="number"
+        android:layout_height="wrap_content"
+         app:layout_constraintTop_toTopOf="@+id/oversFormatId"
+        app:layout_constraintBottom_toBottomOf="@+id/oversFormatId"
+        android:layout_marginStart="@dimen/_15sdp"/>
+
+    <Button
+        android:id="@+id/save_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oversFormatId"
+        android:layout_margin="@dimen/_35sdp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

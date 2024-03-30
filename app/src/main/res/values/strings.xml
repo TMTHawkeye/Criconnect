@@ -56,6 +56,14 @@
     <string name="captainName">"Captain Name : "</string>
     <string name="homeGround">Home Ground :</string>
     <string name="noDatafound">No Data Found</string>
+    <string name="kindly_rate_our_application">Kindly Rate our application.</string>
+    <string name="got_it">Got It</string>
+    <string name="matches_button_showcase_value">Atleast 3 teams are required to generate matches for each team.</string>
+    <string name="matches">Tournament Matches</string>
+    <string name="registerDetails">If you have not registered in the tournament you can do it by clicking here...</string>
+    <string name="tournament">Cricketconnect</string>
+    <string name="tournamentsDesc">The available tournaments will be displayed here.</string>
+    <string name="profileDesc">Your team\'s profile will be displayed here.</string>
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>

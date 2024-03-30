@@ -60,7 +60,8 @@ class TournamentRegistrationActivity : AppCompatActivity() {
                     tournamentName = binding.tournNameET.text.toString(),
                     tournamentLocation = binding.groundAddressET.text.toString(),
                     tournamentEntryFee = binding.entryFeeET.text.toString(),
-                    tournamentWinningPrize = binding.winnngET.text.toString()
+                    tournamentWinningPrize = binding.winnngET.text.toString(),
+                    tournamentOwnerTeam = teamViewModel.getLoggedInUser()?.uid?:""
                 )
                 val dialog = ProgressDialog.show(
                     this@TournamentRegistrationActivity, "",
@@ -145,4 +146,10 @@ class TournamentRegistrationActivity : AppCompatActivity() {
         }
         return true
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(applicationContext).clear(binding.tournametImage)
+    }
+
 }

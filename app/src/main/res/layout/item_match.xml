@@ -10,17 +10,17 @@
         android:id="@+id/card_constrain_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingVertical="@dimen/_5sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingVertical="@dimen/_5sdp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_marginVertical="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_80sdp"
             android:layout_marginHorizontal="@dimen/_25ssp"
+            android:layout_marginVertical="@dimen/_5sdp"
             android:foreground="?attr/selectableItemBackground"
             app:cardCornerRadius="@dimen/_10ssp"
             app:cardElevation="@dimen/_5ssp"
@@ -162,58 +162,84 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_constrain_id">
 
-        <TextView
-            android:id="@+id/winner_title_id"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/select_winner_constrain_id"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_15sdp"
-            android:textSize="@dimen/_12sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/radio_group"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Winner"
-            android:textColor="@color/black"
-            />
-
-        <RadioGroup
-            android:id="@+id/radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@id/winner_title_id"
-            app:layout_constraintEnd_toStartOf="@+id/ok_id"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <RadioButton
-                android:id="@+id/radio_team_a"
+            <TextView
+                android:id="@+id/winnerId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Team A"
+                android:layout_margin="@dimen/_15sdp"
                 android:textColor="@color/black"
-                android:checked="false"/>
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/radio_group"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Winner" />
 
-            <RadioButton
-                android:id="@+id/radio_team_b"
+            <RadioGroup
+                android:id="@+id/radio_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Team B"
-                android:checked="false"
-                android:textColor="@color/black"/>
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ok_id"
+                app:layout_constraintStart_toEndOf="@id/winnerId"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/radio_team_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Team A"
+                    android:textColor="@color/black" />
+
+                <RadioButton
+                    android:id="@+id/radio_team_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Team B"
+                    android:textColor="@color/black" />
+
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/ok_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:text="OK"
+                android:layout_marginStart="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/radio_group"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <Button
-            android:id="@+id/ok_id"
+            android:id="@+id/matchSummary_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
-            app:layout_constraintStart_toEndOf="@+id/radio_group"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:text="Macth Summary"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="@dimen/_14sdp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -94,4 +94,7 @@ dependencies {
     implementation ("com.github.smarteist:autoimageslider:1.4.0")
 
     implementation ("io.github.pilgr:paperdb:2.7.2")
+
+    implementation ("com.github.deano2390:MaterialShowcaseView:1.3.7")
+
 }

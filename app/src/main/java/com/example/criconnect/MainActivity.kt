@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity
@@ -15,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -35,10 +37,12 @@ import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityMainBinding
 import com.example.criconnect.databinding.BottomsheetlayoutBinding
+import com.example.criconnect.databinding.CustomDialogRatingBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import io.paperdb.Paper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,6 +53,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var authProfile: FirebaseAuth? = null
     val teamViewModel: TeamViewModel by viewModel()
     var team: TeamModel? = null
+    var nonZeroRating = true
+    lateinit var ratingKey: String
+    private var exitOnBackPressed = false
+    private var currentNavItem = R.id.nav_home
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,12 +100,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.bottomNavigationView.setBackground(null)
         binding.bottomNavigationView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item: MenuItem ->
             if (item.itemId == R.id.home) {
+                currentNavItem=item.itemId
+
                 replaceFragment(HomeFragment())
             } else if (item.itemId == R.id.shorts) {
+                currentNavItem=item.itemId
+
                 replaceFragment(TeamManagementFragment())
             } else if (item.itemId == R.id.subscriptions) {
+                currentNavItem=item.itemId
+
                 replaceFragment(TeamStatisticsFragment())
             } else if (item.itemId == R.id.library) {
+                currentNavItem=item.itemId
+
                 replaceFragment(SettingsFragment())
 //                Intent intent = new Intent(Activity_Main.this, ProfileActivity.class);
 //                startActivity(intent);
@@ -109,35 +125,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.fab.setOnClickListener(View.OnClickListener { showBottomDialog() })
 
 
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    if (currentNavItem == R.id.nav_home) {
+                        finishAffinity()
+                    } else {
+                        // Navigate to home position
+                         replaceFragment(HomeFragment())
+                        currentNavItem = R.id.nav_home
+                    }
+                }
+            }
+        })
     }
 
     private fun getRegisteredTeamDetails(dialog: ProgressDialog) {
-//        val user=teamViewModel.getLoggedInUser()
-//        teamViewModel.getSelectedTeamDetails(user?.uid) { teamData ->
-//            if(team!=null){
-//                dialog.dismiss()
-//                if (teamData != null) {
-//                    storeTeamDataInSharedPreferences(this@MainActivity,teamData)
-//                }
-//            }
-//            else{
-//                val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
-//                Handler().postDelayed({
-//                    dialog.dismiss()
-//                    startActivity(intent)
-//                }, 2000)
-//            }
-//        }
-
         teamViewModel.getTeamData() { teamData, isAvailable ->
             if (isAvailable) {
-                team=teamData
+                team = teamData
                 dialog.dismiss()
                 if (teamData != null) {
-                    storeTeamDataInSharedPreferences(this@MainActivity,teamData)
+                    storeTeamDataInSharedPreferences(this@MainActivity, teamData)
                 }
-            }
-            else{
+            } else {
                 val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
                 Handler().postDelayed({
                     dialog.dismiss()
@@ -146,6 +160,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+
     private fun showBottomDialog() {
         val dialogBinding = BottomsheetlayoutBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
@@ -174,7 +189,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialogBinding.layoutLive.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
-             startActivity(intent)
+            startActivity(intent)
         }
         dialogBinding.cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -203,17 +218,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (itemId == R.id.nav_home) {
             replaceFragment(HomeFragment())
         } else if (itemId == R.id.nav_settings) {
-//            replaceFragment(new SettingFragment());
-            val intent = intent
-            val nameUsers = intent.getStringExtra("name")
-            val emailUsers = intent.getStringExtra("email")
-            val usernameUsers = intent.getStringExtra("username")
-            val passwordUsers = intent.getStringExtra("password")
+
             val intents = Intent(this@MainActivity, UserProfileActivity::class.java)
-            intents.putExtra("name", nameUsers)
-            intents.putExtra("email", emailUsers)
-            intents.putExtra("username", usernameUsers)
-            intents.putExtra("password", passwordUsers)
+
             startActivity(intents)
         } else if (itemId == R.id.nav_share) {
             shareApplication()
@@ -221,6 +228,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if (itemId == R.id.nav_faq) {
             replaceFragment(FAQFragment())
         } else if (itemId == R.id.nav_rateus) {
+            showRateUsDialog()
 //            showRateDialog()
         } else if (itemId == R.id.nav_logout) {
             deleteTeamDataFromSharedPreferences(this@MainActivity)
@@ -293,4 +301,111 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        rateUsDialog.setCancelable(false)
 //        rateUsDialog.show()
 //    }
+
+    private fun showRateUsDialog() {
+        ratingKey = "rate"
+        val dialog_binding = CustomDialogRatingBinding.inflate(layoutInflater)
+        val dialog = Dialog(this@MainActivity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(dialog_binding.root)
+
+        val window: Window = dialog.window!!
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.setGravity(Gravity.CENTER)
+
+        dialog.show()
+        dialog_binding.ratingBar.setIsIndicator(false)
+
+        val ratingExisted = Paper.book().read(ratingKey, 0.0f)
+
+        dialog_binding.ratingBar.rating = ratingExisted?:0.0f
+
+
+
+        dialog_binding.cardSubmit.setOnClickListener {
+            val rating = dialog_binding.ratingBar.rating
+            handleRatings(dialog, rating,dialog_binding)
+        }
+
+    }
+
+    private fun handleRatings(
+        rateUsDialog: Dialog,
+        rating: Float,
+        dialog_binding: CustomDialogRatingBinding
+    ) {
+        when {
+            rating == 0.0f -> {
+                nonZeroRating = false
+                Toast.makeText(
+                    this@MainActivity,
+                    R.string.kindly_rate_our_application,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            rating <= 1.0f -> {
+                setRating(ratingKey, rating)
+                rateUsDialog.dismiss()
+            }
+
+            rating <= 2.0f -> {
+                setRating(ratingKey, rating)
+
+                rateUsDialog.dismiss()
+            }
+
+            rating <= 3.0f -> {
+                setRating(ratingKey, rating)
+
+                rateUsDialog.dismiss()
+            }
+
+            rating <= 4.0f -> {
+                setRating(ratingKey, rating)
+
+                rateUsDialog.dismiss()
+            }
+
+            rating == 5.0f -> {
+                setRating(ratingKey, rating)
+                rateUsDialog.dismiss()
+                val appPackageName = packageName
+                try {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=$appPackageName")
+                        )
+                    )
+                } catch (e: android.content.ActivityNotFoundException) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
+                        )
+                    )
+                }
+            }
+
+            else -> {
+                setRating(ratingKey, rating)
+                rateUsDialog.dismiss()
+            }
+
+
+        }
+
+    }
+
+    private fun setRating(key: String, value: Float) {
+        Paper.book().write("$key", value)
+        nonZeroRating = true
+    }
+
+    private fun setExitOnBackPressed(exit: Boolean) {
+        exitOnBackPressed = exit
+    }
 }

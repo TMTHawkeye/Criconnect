@@ -52,7 +52,7 @@ class RegisterUserActivity : AppCompatActivity() {
             val year = calender[Calendar.YEAR]
             picker = DatePickerDialog(
                 this@RegisterUserActivity,
-                { view, year, month, dayofMonth -> binding.editTextRegisterDob.setText(dayofMonth.toString() + "/" + (month + 1) + year) },
+                { view, year, month, dayofMonth -> binding.editTextRegisterDob.setText(dayofMonth.toString() + "/" + (month + 1) +"/"+ year) },
                 year,
                 month,
                 day

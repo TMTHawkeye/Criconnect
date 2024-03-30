@@ -79,6 +79,7 @@
                 app:sliderStartAutoCycle="true" />
 
             <ProgressBar
+                android:visibility="gone"
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,18 +89,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/noDataId"
-                android:layout_width="wrap_content"
+                android:id="@+id/noDataIdTVTournament"
+                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/noDatafound"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-medium"
-                    android:text="Asim (Caption Name)"
+                    android:text=" - (Caption Name)"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="19sp"

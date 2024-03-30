@@ -149,6 +149,12 @@ class TeamRegistrationActivity : AppCompatActivity() {
         return targetFile
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Glide.with(applicationContext).clear(binding.profileImg)
+    }
+
+
 
 
 }

@@ -97,18 +97,18 @@ class UserRepository(val context: Context) {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val readUserDetails: ReadWriteUserDetails? =
                                 snapshot.getValue(ReadWriteUserDetails::class.java)
-                            if (readUserDetails != null) {
-                                val userData = UserData(firebaseUser.displayName,firebaseUser.email,readUserDetails.doB,readUserDetails.gender,readUserDetails.mobile,"")
+//                            if (readUserDetails != null) {
+                                val userData = UserData(firebaseUser.displayName,firebaseUser.email,readUserDetails?.doB,readUserDetails?.gender,readUserDetails?.mobile,"")
                                 callback.invoke(true,true,userData)
 
                                 //                   Uri uri = firebaseUser.getPhotoUrl();
 //                   Picasso.with(ProfileActivity.this).load(uri).into(imageView);
-                            } else {
-                                callback.invoke(true,false,null)
-
-//                                Toast.makeText(this@UserProfileActivity, "Something went wrong!", Toast.LENGTH_LONG)
-//                                    .show()
-                            }
+//                            } else {
+//                                callback.invoke(true,false,null)
+//
+////                                Toast.makeText(this@UserProfileActivity, "Something went wrong!", Toast.LENGTH_LONG)
+////                                    .show()
+//                            }
 //                            binding.progressBar.setVisibility(View.GONE)
                         }
 
