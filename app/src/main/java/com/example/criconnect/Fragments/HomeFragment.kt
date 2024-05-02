@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
@@ -14,10 +15,12 @@ import com.example.criconnect.Activities.TournamentDataActivity
 import com.example.criconnect.Adapters.SliderAdapter
 import com.example.criconnect.R
 import com.example.criconnect.ViewModels.TeamViewModel
+import com.example.criconnect.ViewModels.TournamentViewModel
 import com.example.criconnect.databinding.FragmentHomeBinding
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
@@ -26,7 +29,9 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
-    val teamViewModel: TeamViewModel by viewModel()
+    val teamViewModel: TeamViewModel by sharedViewModel()
+
+    val tournamentViewModel : TournamentViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +51,57 @@ class HomeFragment : Fragment() {
         val adapter = SliderAdapter(requireContext())
         val slideModels = ArrayList<SlideModel>()
 
-        teamViewModel.getTournament { tournamentList ->
+        tournamentViewModel.getTournaments {registeredTournamentList->
+            binding.progressBar.visibility = View.VISIBLE
+            if (registeredTournamentList?.size != 0) {
+                registeredTournamentList?.forEach { tournamentItem ->
+                    slideModels.add(
+                        SlideModel(
+                            tournamentItem.name,
+                            tournamentItem.name,
+                            ScaleTypes.FIT
+                        )
+                    )
+                    adapter.addItem(tournamentItem)
+                }
+                binding.noDataIdTVTournament.visibility = View.GONE
+                binding.sliderView.visibility = View.VISIBLE
+
+            } else {
+                binding.sliderView.visibility = View.GONE
+                binding.noDataIdTVTournament.visibility = View.VISIBLE
+            }
+            binding.progressBar.visibility = View.GONE
+        }
+
+/*
+        tournamentViewModel.tournamentListLiveData.observe(viewLifecycleOwner, Observer{registeredTournamentList->
+            binding.progressBar.visibility = View.VISIBLE
+            if (registeredTournamentList?.size != 0) {
+                registeredTournamentList?.forEach { tournamentItem ->
+                    slideModels.add(
+                        SlideModel(
+                            tournamentItem.name,
+                            tournamentItem.name,
+                            ScaleTypes.FIT
+                        )
+                    )
+                    adapter.addItem(tournamentItem)
+                }
+                binding.noDataIdTVTournament.visibility = View.GONE
+                binding.sliderView.visibility = View.VISIBLE
+
+            } else {
+                binding.sliderView.visibility = View.GONE
+                binding.noDataIdTVTournament.visibility = View.VISIBLE
+            }
+            binding.progressBar.visibility = View.GONE
+
+        })
+*/
+
+
+        /*teamViewModel.getTournament { tournamentList ->
             binding.progressBar.visibility = View.VISIBLE
             if (tournamentList?.size != 0) {
                 tournamentList?.forEach { tournamentItem ->
@@ -68,7 +123,7 @@ class HomeFragment : Fragment() {
             }
             binding.progressBar.visibility = View.GONE
 
-        }
+        }*/
         binding.sliderView.setSliderAdapter(adapter)
         binding.sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM)
         binding.sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)

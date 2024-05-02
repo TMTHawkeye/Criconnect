@@ -140,7 +140,12 @@
                     android:padding="@dimen/_12sdp"
                     android:textSize="@dimen/_12ssp" />
 
-
+            <com.example.criconnect.CustomSpinner
+                android:id="@+id/spinner_fruits"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="16dp"
+                 android:dropDownVerticalOffset="40dp" />
 
             <Button
                 android:id="@+id/tv_loginbutton"

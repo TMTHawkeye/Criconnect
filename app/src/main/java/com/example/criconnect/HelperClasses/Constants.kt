@@ -17,6 +17,9 @@ import com.google.gson.Gson
 object Constants {
     const val ownTeamDataPreference = "TEAMDATA"
     const val teamDataKey = "team_data_key"
+    const val dashboardOrganizer = "Organizer"
+    const val dashboardCaptain = "Captain"
+    const val dashboardAdmin = "Admin"
 
 
     fun getTeamData(context:Context): TeamModel? {

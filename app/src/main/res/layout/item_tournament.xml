@@ -24,8 +24,8 @@
                 android:id="@+id/tournamentImage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/list_detail"
+                android:scaleType="centerInside"
+                android:src="@drawable/no_image_found"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

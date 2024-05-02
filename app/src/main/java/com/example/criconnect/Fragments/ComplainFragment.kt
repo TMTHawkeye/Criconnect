@@ -1,6 +1,7 @@
 package com.example.criconnect.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,7 @@ class ComplainFragment : Fragment() {
         teamViewModel.getSelectedTeamDetails(user?.uid) { team ->
             if(team!=null) {
                 teamViewModel.getAllMatchesFromAllTournaents {
+                    Log.d("TAG_matchesList", "onCreateView: ${it?.size}")
                     val bestPlayersList = getMostPlayerOfTheMatch(user?.uid, it, team?.playerData)
                     dataList = team?.playerData
                     if (bestPlayersList.size != 0) {
@@ -67,8 +69,6 @@ class ComplainFragment : Fragment() {
                 binding.recyclerView.visibility = View.GONE
             }
         }
-
-
         return binding.root
     }
 
@@ -78,7 +78,6 @@ class ComplainFragment : Fragment() {
         adapter = PlayerAdapter(requireActivity(), playerList,null)
         binding.recyclerView.setAdapter(adapter)
     }
-
 
     private fun searchList(text: String) {
         dataList?.let {
@@ -123,30 +122,46 @@ class ComplainFragment : Fragment() {
         return mostPlayerOfTheMatch ?: ""
     }*/
 
-    fun getMostPlayerOfTheMatch(teamId: String?, matches: List<MatchModel>?, allPlayers: ArrayList<PlayerData>?): List<PlayerData> {
-        val playerMatchCountMap = mutableMapOf<String, Int>()
+//    fun getMostPlayerOfTheMatch(teamId: String?, matches: List<MatchModel>?, allPlayers: ArrayList<PlayerData>?): List<PlayerData> {
+//        val playerMatchCountMap = mutableMapOf<String, Int>()
+//
+//        // Iterate through the matches
+//        matches?.forEach { match ->
+//            if (match.winnerId == teamId) {
+//                val playerOfTheMatch = match.playerOfMatch
+//                // Increment count for the player
+//                if (playerOfTheMatch.isNotBlank()) {
+//                    playerMatchCountMap[playerOfTheMatch] = (playerMatchCountMap[playerOfTheMatch] ?: 0) + 1
+//                }
+//            }
+//        }
+//
+//        // Sort players by count of "Player of the Match" awards
+//        val sortedPlayers = playerMatchCountMap.entries.sortedByDescending { it.value }.mapNotNull { entry ->
+//            val playerName = entry.key
+//            val playerData = allPlayers?.find { it.playerName == playerName }
+//            playerData
+//        }
+//
+//        return sortedPlayers
+//    }
 
-        // Iterate through the matches
-        matches?.forEach { match ->
-            if (match.winnerId == teamId) {
-                val playerOfTheMatch = match.playerOfMatch
-                // Increment count for the player
-                if (playerOfTheMatch.isNotBlank()) {
-                    playerMatchCountMap[playerOfTheMatch] = (playerMatchCountMap[playerOfTheMatch] ?: 0) + 1
-                }
-            }
-        }
+
+
+    fun getMostPlayerOfTheMatch(teamId: String?, matches: List<MatchModel>?, allPlayers: ArrayList<PlayerData>?): List<PlayerData> {
+        // Filter matches based on teamId and non-blank playerOfTheMatch
+        val relevantMatches = matches?.filter { it.winnerId == teamId && it.playerOfMatch.isNotBlank() }
+
+        // Count occurrences of playerOfTheMatch
+        val playerMatchCountMap = relevantMatches?.groupBy { it.playerOfMatch }?.mapValues { it.value.size }
 
         // Sort players by count of "Player of the Match" awards
-        val sortedPlayers = playerMatchCountMap.entries.sortedByDescending { it.value }.mapNotNull { entry ->
-            val playerName = entry.key
-            val playerData = allPlayers?.find { it.playerName == playerName }
-            playerData
+        val sortedPlayers = playerMatchCountMap?.entries?.sortedByDescending { it.value }?.mapNotNull { entry ->
+            allPlayers?.find { it.playerName == entry.key }
         }
 
-        return sortedPlayers
+        return sortedPlayers ?: emptyList()
     }
-
 
 
 

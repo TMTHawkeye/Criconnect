@@ -4,14 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.criconnect.R
-import com.example.criconnect.SplashLoginActivity
 import com.example.criconnect.ViewModels.UserViewModel
 import com.example.criconnect.databinding.FragmentSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +31,7 @@ class SettingsFragment : Fragment() {
     ): View? {
         binding=FragmentSettingsBinding.inflate(layoutInflater,container,false)
 
-        userViewModel.showUserProfile { isEmailVerified, isuserDetailsAvailable, userData ->
+        userViewModel.showUserProfile("") { isEmailVerified, isuserDetailsAvailable, userData ->
             if (isEmailVerified) {
                 if (isuserDetailsAvailable) {
                     fullName = userData?.fullName

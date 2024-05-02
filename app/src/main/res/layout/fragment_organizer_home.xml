@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            android:layout_marginVertical="@dimen/_30sdp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="20dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Upload Data"
+                    android:textAlignment="center"
+                    android:textColor="@color/lavender"
+                    android:textSize="@dimen/_25sdp"
+                    android:id="@+id/upload_data_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageView
+                    android:id="@+id/uploadImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/uploadimg"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_data_tv"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tournamentNamelayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/uploadImage">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tournament Name*"
+                        android:id="@+id/tournamentName_ET"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Organizer name -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:id="@+id/organizer_name_layout"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tournamentNamelayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Organizer Name"
+                        android:id="@+id/organizer_name_ET"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            City name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/city_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/organizer_name_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="City"
+                        android:id="@+id/city_ET"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Ground Name-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/ground_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/city_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ground"
+                        android:id="@+id/gorund_ET"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--            Organizer Email-->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/organizer_email_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ground_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Organizer Email"
+                        android:id="@+id/organizerEmail_ET"
+                        android:inputType="textEmailAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/event_titming_heading_id"
+                    android:text="Event Timing"
+                     android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/organizer_email_layout"/>
+                <!--            Start and ending date -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/event_constraint_id"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/event_titming_heading_id">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:id="@+id/start_date_ETlayout"
+                        android:padding="@dimen/_1sdp"
+                        android:layout_height="match_parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/end_date_ETlayout"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/startDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:drawableEnd="@drawable/baseline_calendar_month_24"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:hint="Start Date"
+                            android:inputType="date" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:id="@+id/end_date_ETlayout"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/start_date_ETlayout">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/endDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:drawableEnd="@drawable/baseline_calendar_month_24"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:hint="End Date"
+                            android:inputType="date" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/ball_type_heading_id"
+                    android:text="Select Ball Type"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/event_constraint_id"/>
+
+                <!--            Pitch type starts from here-->
+                <RelativeLayout
+                    android:id="@+id/relative_ball_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ball_type_heading_id">
+
+                    <RadioGroup
+                        android:id="@+id/radiobutton11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <RadioButton
+                            android:id="@+id/radio_tennis"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:background="@drawable/radio_button_background_selector"
+                            android:button="@android:color/transparent"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+
+                            />
+
+                        <RadioButton
+                            android:id="@+id/radio_hard"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:layout_marginHorizontal="@dimen/_20sdp"
+                            android:background="@drawable/secondradio_button_background_selector"
+                            android:button="@android:color/transparent"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+                            android:scaleType="fitCenter"
+                            android:textColor="@drawable/radio_flat_text_selector" />
+
+                        <RadioButton
+                            android:id="@+id/radio_others"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+
+                            android:background="@drawable/radio_button_background_selector"
+                            android:button="@android:color/transparent"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+
+                            android:textColor="@drawable/radio_flat_text_selector" />
+
+
+                    </RadioGroup>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ball_type_linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_rowSpan="1"
+                    android:layout_columnSpan="1"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/relative_ball_type">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tennis Ball"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_15sdp"
+                        android:text="Leather Ball"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Other Ball"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/pitch_type_heading_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Pitch Type"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ball_type_linear"/>
+
+                <RelativeLayout
+                    android:id="@+id/pitch_type_radio_relative_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pitch_type_heading_id">
+
+                    <RadioGroup
+                        android:id="@+id/daily_weekly_button_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <RadioButton
+                            android:id="@+id/rough_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_25sdp"
+                            android:background="@drawable/radio_flat_selector"
+                            android:button="@android:color/transparent"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+                            android:text="ROUGH"
+                            android:textColor="@drawable/radio_flat_text_selector" />
+
+                        <RadioButton
+                            android:id="@+id/cement_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_marginStart="20dp"
+                            android:background="@drawable/radio_flat_selector"
+                            android:button="@android:color/transparent"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+                            android:text="CEMENT"
+                            android:textColor="@drawable/radio_flat_text_selector" />
+
+                        <RadioButton
+                            android:id="@+id/turf_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_marginStart="20dp"
+                            android:background="@drawable/radio_flat_selector"
+                            android:button="@android:color/transparent"
+                            android:gravity="center"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp"
+                            android:text="TURF"
+                            android:textColor="@drawable/radio_flat_text_selector" />
+                    </RadioGroup>
+
+                </RelativeLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:id="@+id/details_id"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pitch_type_radio_relative_id">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Detail"
+                        android:id="@+id/details_ET"
+                        android:inputType="text|textLongMessage" />
+                    <!--                Add more Details like prizes, award , entry fees , rules, etc-->
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Save"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_id"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

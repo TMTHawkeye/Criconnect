@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener
 
 class UserRepository(val context: Context) {
 
-    fun registerUser(userData: UserData, activity:Activity,callback: (Boolean,Boolean,String)->Unit){
+    fun registerUser(userData: UserData,selectedItem: String, activity:Activity,callback: (Boolean,Boolean,String)->Unit){
         val auth = FirebaseAuth.getInstance()
         auth.createUserWithEmailAndPassword(userData.email!!, userData.password!!).addOnCompleteListener(
             activity
@@ -35,11 +35,11 @@ class UserRepository(val context: Context) {
                     UserProfileChangeRequest.Builder().setDisplayName(userData.fullName).build()
                 firebaseuser!!.updateProfile(profileChangeRequest)
                 //Enter User Data into the Firebase  Realtime Database
-                val writeUserDetails = ReadWriteUserDetails(userData.dob, userData.gender, userData.mobile)
+                val writeUserDetails = ReadWriteUserDetails(userData.dob, userData.gender, userData.mobile,selectedItem)
 
                 //eXTRACTING uSER REFERENCE FROM DATABASE FOR REGISTRED USERS
                 val referenceProfile =
-                    FirebaseDatabase.getInstance().getReference("Registered Users")
+                    FirebaseDatabase.getInstance().getReference("Registered Users").child(selectedItem)
                 referenceProfile.child(firebaseuser.uid).setValue(writeUserDetails)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -85,20 +85,20 @@ class UserRepository(val context: Context) {
         }
     }
 
-    fun showUserProfile(callback: (Boolean,Boolean,UserData?) -> Unit) {
+    fun showUserProfile(selectedItem:String?,callback: (Boolean,Boolean,UserData?) -> Unit) {
         var firebaseUser = FirebaseAuth.getInstance().currentUser
         if (firebaseUser != null) {
             checkIfEmailVerified(firebaseUser){
                 if(it){
                     val userID = firebaseUser.uid
                     Log.d("TAG_user_uuid", "showUserProfile: ${userID}")
-                    val referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Users")
+                    val referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Users").child("$selectedItem")
                     referenceProfile.child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val readUserDetails: ReadWriteUserDetails? =
                                 snapshot.getValue(ReadWriteUserDetails::class.java)
 //                            if (readUserDetails != null) {
-                                val userData = UserData(firebaseUser.displayName,firebaseUser.email,readUserDetails?.doB,readUserDetails?.gender,readUserDetails?.mobile,"")
+                                val userData = UserData(firebaseUser.displayName,firebaseUser.email,readUserDetails?.doB,readUserDetails?.gender,readUserDetails?.mobile,"", readUserDetails?.userType?:"Organizer")
                                 callback.invoke(true,true,userData)
 
                                 //                   Uri uri = firebaseUser.getPhotoUrl();
@@ -129,6 +129,34 @@ class UserRepository(val context: Context) {
         }
 
     }
+
+
+    fun updateUserProfile(userData: UserData, selectedItem: String?, callback: (Boolean, String) -> Unit) {
+        val auth = FirebaseAuth.getInstance()
+        val firebaseUser = auth.currentUser
+
+        if (firebaseUser != null) {
+            // Update Display Name of User
+            val profileChangeRequest = UserProfileChangeRequest.Builder().setDisplayName(userData.fullName).build()
+            firebaseUser.updateProfile(profileChangeRequest)
+
+            // Update User Data in Firebase Realtime Database
+            val writeUserDetails = ReadWriteUserDetails(userData.dob, userData.gender, userData.mobile, selectedItem)
+            val referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Users").child("$selectedItem")
+            referenceProfile.child(firebaseUser.uid).setValue(writeUserDetails)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        callback.invoke(true, "Data has been Updated")
+                    } else {
+                        callback.invoke(false, "Failed to update user profile.")
+                    }
+                }
+        } else {
+            callback.invoke(false, "User is not authenticated.")
+        }
+    }
+
+
 
 
 

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constrain_data_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title_tournament"
+                style="@style/textStyle_header"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/_20sdp"/>
+
+            <ImageView
+                android:id="@+id/tournamentImageId"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_tournament" />
+
+
+            <TextView
+                android:id="@+id/location_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_15sdp"
+                android:text="@string/location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tournamentImageId" />
+
+            <TextView
+                android:id="@+id/location_id"
+                android:layout_width="@dimen/_150sdp"
+                android:maxLines="1"
+                android:gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:ellipsize="end"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/location_header"
+                app:layout_constraintBottom_toTopOf="@+id/entry_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/location_header" />
+
+            <TextView
+                android:id="@+id/entry_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Ball Type :"
+                app:layout_constraintBottom_toTopOf="@+id/winning_header"
+                app:layout_constraintStart_toStartOf="@id/location_header"
+                app:layout_constraintTop_toBottomOf="@+id/location_header" />
+
+
+            <TextView
+                android:id="@+id/entry_id"
+                android:layout_width="@dimen/_150sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/entry_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/entry_header" />
+
+
+            <TextView
+                android:id="@+id/winning_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Organizer Email :"
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/entry_header" />
+
+            <TextView
+                android:id="@+id/winning_id"
+                android:layout_width="@dimen/_150sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/winning_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/winning_header" />
+
+            <TextView
+                android:id="@+id/organizerName_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Organizer Name :"
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/winning_header" />
+
+            <TextView
+                android:id="@+id/organizerName_id"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/organizerName_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/organizerName_header" />
+
+            <TextView
+                android:id="@+id/winningPrize_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Winning Prize :"
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/organizerName_header" />
+
+            <TextView
+                android:id="@+id/winningPrize_id"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/winningPrize_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/winningPrize_header" />
+
+
+            <TextView
+                android:id="@+id/eventStart_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Event Start Date : "
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/winningPrize_header" />
+
+            <TextView
+                android:id="@+id/eventStart_id"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/eventStart_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/eventStart_header" />
+
+
+            <TextView
+                android:id="@+id/eventEnd_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Event End Date : "
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/eventStart_header" />
+
+            <TextView
+                android:id="@+id/eventEnd_id"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/eventEnd_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/eventEnd_header" />
+
+
+            <TextView
+                android:id="@+id/pitchType_header"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_5sdp"
+                android:text="Pitch Type : "
+                app:layout_constraintStart_toStartOf="@id/entry_header"
+                app:layout_constraintTop_toBottomOf="@+id/eventEnd_header" />
+
+            <TextView
+                android:id="@+id/pitchType_id"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_25sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/pitchType_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/pitchType_header" />
+
+            <TextView
+                android:id="@+id/details_id"
+                android:layout_width="0dp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pitchType_header" />
+
+
+            <Button
+                android:id="@+id/btn_organizeMatches"
+                style="@style/textStyle_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:text="Organize Matches"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/details_id" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/teamsRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_organizeMatches" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -36,7 +36,7 @@ class TournamentRegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTournamentRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+        selectedImageDrawable=getDrawable(R.drawable.no_image_found)
 
         binding.startdateET.setOnClickListener(View.OnClickListener {
             val calender = Calendar.getInstance()
@@ -52,6 +52,7 @@ class TournamentRegistrationActivity : AppCompatActivity() {
             )
             picker!!.show()
         })
+
 
         binding.saveButton.setOnClickListener {
             if (validateFields()) {

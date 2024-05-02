@@ -21,6 +21,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.example.criconnect.Activities.EditProfileActivity
 import com.example.criconnect.Activities.PlayerProfileActivity
 import com.example.criconnect.Activities.TeamRegistrationActivity
 import com.example.criconnect.Activities.TournamentRegistrationActivity
@@ -143,6 +144,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
+
+
     private fun getRegisteredTeamDetails(dialog: ProgressDialog) {
         teamViewModel.getTeamData() { teamData, isAvailable ->
             if (isAvailable) {
@@ -166,11 +169,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(dialogBinding.root)
-        dialogBinding.layoutTournament.setOnClickListener {
+        /*dialogBinding.layoutTournament.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TournamentRegistrationActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
         if (team != null) {
             dialogBinding.layoutVideo.visibility = View.GONE
@@ -189,6 +192,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialogBinding.layoutLive.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this@MainActivity, TeamRegistrationActivity::class.java)
+            startActivity(intent)
+        }
+
+        dialogBinding.layouteditProfile.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this@MainActivity, EditProfileActivity::class.java)
             startActivity(intent)
         }
         dialogBinding.cancelButton.setOnClickListener { dialog.dismiss() }
@@ -213,8 +222,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
-
-
         if (itemId == R.id.nav_home) {
             replaceFragment(HomeFragment())
         } else if (itemId == R.id.nav_settings) {
@@ -408,4 +415,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setExitOnBackPressed(exit: Boolean) {
         exitOnBackPressed = exit
     }
+
+
 }

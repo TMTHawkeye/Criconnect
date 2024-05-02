@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recCard"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="10dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:background="@color/lavender">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/recImage"
+            android:src="@drawable/uploadimg"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:id="@+id/recTitle"
+            android:maxLines="1"
+            android:gravity="start"
+            android:ellipsize="end"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            app:layout_constraintBottom_toTopOf="@+id/recLang"
+            app:layout_constraintStart_toEndOf="@+id/recImage"
+            app:layout_constraintTop_toTopOf="@+id/recImage"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recLang"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+
+            app:layout_constraintStart_toStartOf="@+id/recTitle"
+            app:layout_constraintTop_toBottomOf="@+id/recTitle"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textStyle="bold"
+            android:id="@+id/delete_item"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp"/>
+
+        <!--        <TextView-->
+        <!--            android:layout_width="140dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:id="@+id/recDesc"-->
+        <!--            android:text="desc"-->
+        <!--            android:textColor="@color/lavender"-->
+        <!--            android:textSize="14sp"-->
+        <!--            android:layout_toEndOf="@id/recImage"-->
+        <!--            android:layout_below="@id/recTitle"-->
+        <!--            android:layout_marginStart="20dp"-->
+        <!--            android:maxLines="1"-->
+        <!--            android:layout_marginBottom="12dp"/>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

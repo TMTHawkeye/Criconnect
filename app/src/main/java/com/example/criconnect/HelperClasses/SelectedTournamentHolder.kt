@@ -1,7 +1,7 @@
 package com.example.criconnect.HelperClasses
 
-import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.ModelClasses.tournamentDataClass
 
 object SelectedTournamentHolder {
-    var selectedTournament: TournamentData? = null
+    var selectedTournament: tournamentDataClass? = null
 }

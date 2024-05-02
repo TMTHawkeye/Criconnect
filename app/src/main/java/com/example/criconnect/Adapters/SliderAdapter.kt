@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.example.criconnect.Activities.TournamentDetailActivity
 import com.example.criconnect.HelperClasses.base64ToDrawable
-import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.ModelClasses.tournamentDataClass
 import com.example.criconnect.R
 import com.example.criconnect.databinding.ImageSliderLayoutItemBinding
 import com.smarteist.autoimageslider.SliderViewAdapter
@@ -23,7 +23,7 @@ import com.smarteist.autoimageslider.SliderViewAdapter
 class SliderAdapter(context: Context) :
     SliderViewAdapter<SliderAdapter.SliderAdapterVH>() {
     private val context: Context
-    private var mSliderItems: MutableList<TournamentData> = ArrayList<TournamentData>()
+    private var mSliderItems: MutableList<tournamentDataClass> = ArrayList<tournamentDataClass>()
 
     lateinit var binding: ImageSliderLayoutItemBinding
 
@@ -31,7 +31,7 @@ class SliderAdapter(context: Context) :
         this.context = context
     }
 
-    fun renewItems(sliderItems: MutableList<TournamentData>) {
+    fun renewItems(sliderItems: MutableList<tournamentDataClass>) {
         mSliderItems = sliderItems
         notifyDataSetChanged()
     }
@@ -41,7 +41,7 @@ class SliderAdapter(context: Context) :
         notifyDataSetChanged()
     }
 
-    fun addItem(sliderItem: TournamentData) {
+    fun addItem(sliderItem: tournamentDataClass) {
         mSliderItems.add(sliderItem)
         notifyDataSetChanged()
     }
@@ -53,28 +53,28 @@ class SliderAdapter(context: Context) :
     }
 
     override fun onBindViewHolder(viewHolder: SliderAdapterVH, position: Int) {
-        val sliderItem: TournamentData = mSliderItems[position]
-//        viewHolder.binding.tournamentNameId.text = sliderItem.tournamentName
+        val sliderItem: tournamentDataClass = mSliderItems[position]
+        viewHolder.binding.tournamentNameId.text = sliderItem.name
 
-        loadImage(position,viewHolder)
+        loadImage(position, viewHolder)
 
         viewHolder.itemView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val intent = Intent(context, TournamentDetailActivity::class.java)
-                    .putExtra("selectedTournament",mSliderItems?.get(position))
+                    .putExtra("selectedTournament", mSliderItems?.get(position))
                 context.startActivity(intent)
             }
         })
     }
 
-    fun loadImage(position: Int, holder: SliderAdapterVH){
+    fun loadImage(position: Int, holder: SliderAdapterVH) {
         val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
         val options: RequestOptions = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .placeholder(R.drawable.circlelogo)
-            .error(R.drawable.circlelogo)
+            .placeholder(R.drawable.no_image_found)
+            .error(R.drawable.no_image_found)
 
         Glide.with(context)
             .load(mSliderItems?.get(position)?.tournamentLogo)

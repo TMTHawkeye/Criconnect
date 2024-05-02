@@ -13,6 +13,7 @@ import com.example.criconnect.ModelClasses.MatchModel
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityMatchSummaryBinding
+import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MatchSummaryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -28,7 +29,8 @@ class MatchSummaryActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         setContentView(binding.root)
 
         match = intent?.getSerializableExtra("selectedMatch") as MatchModel?
-        selectedTournamentId = intent?.getStringExtra("selectedTournamentId")
+//        selectedTournamentId = intent?.getStringExtra("selectedTournamentId")
+        selectedTournamentId = FirebaseAuth.getInstance().currentUser?.uid
         isOwner = intent.getBooleanExtra("isOwner", false)
         Log.d("TAG_winnerId", "onCreate: ${isOwner}")
 

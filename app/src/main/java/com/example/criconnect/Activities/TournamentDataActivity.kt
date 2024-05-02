@@ -10,16 +10,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.criconnect.Adapters.MyAdapter
 import com.example.criconnect.ModelClasses.DataClass
 import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.ModelClasses.tournamentDataClass
 import com.example.criconnect.ViewModels.TeamViewModel
+import com.example.criconnect.ViewModels.TournamentViewModel
 import com.example.criconnect.databinding.ActivityTournamentDataBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class TournamentDataActivity : AppCompatActivity() {
     lateinit var binding: ActivityTournamentDataBinding
-    val teamViewModel: TeamViewModel by viewModel()
+//    val teamViewModel: TeamViewModel by viewModel()
+    val tournamentViewModel: TournamentViewModel by viewModel()
 
-    var dataList: List<TournamentData>? = null
+    var dataList: List<tournamentDataClass>? = null
     var adapter: MyAdapter? = null
     var androidData: DataClass? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,18 +50,28 @@ class TournamentDataActivity : AppCompatActivity() {
     }
 
     fun getTournamentsFromDatabase(dialog: ProgressDialog) {
-        teamViewModel.getTournament { tournamentList ->
-            Log.d("TAGlist", "getTournamentsFromDatabase: $tournamentList")
-            dataList = tournamentList
-            if (tournamentList?.size != 0) {
-                dialog.dismiss()
-                setAdapter(tournamentList)
+//        teamViewModel.getTournament { tournamentList ->
+//            Log.d("TAGlist", "getTournamentsFromDatabase: $tournamentList")
+//            dataList = tournamentList
+//            if (tournamentList?.size != 0) {
+//                dialog.dismiss()
+//                setAdapter(tournamentList)
+//            }
+//        }
+
+        tournamentViewModel.getTournaments { registeredTournamentList ->
+            Log.d("TAGlist", "getTournamentsFromDatabase: $registeredTournamentList")
+            dataList = registeredTournamentList
+            dialog.dismiss()
+
+            if (registeredTournamentList?.size != 0) {
+                setAdapter(registeredTournamentList)
             }
         }
     }
 
 
-    fun setAdapter(tournamentList: List<TournamentData>?) {
+    fun setAdapter(tournamentList: List<tournamentDataClass>?) {
         val gridLayoutManager = GridLayoutManager(this@TournamentDataActivity, 1)
         binding.recyclerView.setLayoutManager(gridLayoutManager)
         adapter = MyAdapter(this@TournamentDataActivity, tournamentList)
@@ -66,10 +79,10 @@ class TournamentDataActivity : AppCompatActivity() {
     }
 
     private fun searchList(text: String) {
-        val dataSearchList: MutableList<TournamentData> = ArrayList()
+        val dataSearchList: MutableList<tournamentDataClass> = ArrayList()
         dataList?.let {
             for (data in it) {
-                if (data.tournamentName?.toLowerCase()!!
+                if (data.name?.toLowerCase()!!
                         .contains(text.lowercase(Locale.getDefault()))
                 ) {
                     dataSearchList.add(data)

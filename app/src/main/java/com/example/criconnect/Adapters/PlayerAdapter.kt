@@ -50,7 +50,7 @@ class PlayerAdapter(
 //        holder.binding.recImage.setImageResource(dataList!![position].dataImage)
 //        val base64toDrawable = base64ToDrawable( dataList?.get(position)?.playerLogo)
         Glide.with(ctxt).load(dataList!!.get(position).playerLogo)
-            .error(ctxt.getDrawable(R.drawable.circlelogo)).into(holder.binding.recImage)
+            .error(ctxt.getDrawable(R.drawable.no_image_found)).into(holder.binding.recImage)
         holder.binding.recTitle.setText(dataList!![position].playerName)
         holder.binding.recLang.setText(dataList!![position].speciality)
 
@@ -97,8 +97,8 @@ class PlayerAdapter(
         val options: RequestOptions = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .placeholder(R.drawable.circlelogo)
-            .error(R.drawable.circlelogo)
+            .placeholder(R.drawable.no_image_found)
+            .error(R.drawable.no_image_found)
 
         Glide.with(ctxt)
             .load(dataList?.get(position)?.playerLogo)

@@ -10,11 +10,15 @@ import com.google.firebase.auth.FirebaseUser
 
 class UserViewModel(val repository: UserRepository) : ViewModel() {
 
-    fun registerUser(userData : UserData, activity: Activity, callback:(Boolean, Boolean, String)->Unit){
-        repository.registerUser(userData, activity,callback)
+    fun registerUser(userData : UserData, selectedItem: String,activity: Activity, callback:(Boolean, Boolean, String)->Unit){
+        repository.registerUser(userData, selectedItem,activity,callback)
     }
 
-    fun showUserProfile(callback: (Boolean,Boolean,UserData?) -> Unit){
-        repository.showUserProfile(callback)
+    fun showUserProfile(selectedItem:String?,callback: (Boolean,Boolean,UserData?) -> Unit){
+        repository.showUserProfile(selectedItem,callback)
+    }
+
+    fun updateUserProfile(userData: UserData, selectedItem: String?,  callback: (Boolean, String) -> Unit){
+        repository.updateUserProfile(userData,selectedItem,callback)
     }
 }

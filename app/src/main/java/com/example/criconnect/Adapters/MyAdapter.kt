@@ -5,7 +5,6 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,17 +18,18 @@ import com.example.criconnect.Activities.TournamentDetailActivity
 import com.example.criconnect.HelperClasses.base64ToDrawable
 import com.example.criconnect.ModelClasses.DataClass
 import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.ModelClasses.tournamentDataClass
 import com.example.criconnect.R
 import com.example.criconnect.databinding.ItemTournamentBinding
 import com.example.criconnect.databinding.RecyclerItemBinding
 import java.io.Serializable
 
-class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
+class MyAdapter(val ctxt:Context ,val dataListt: List<tournamentDataClass>?) :
     RecyclerView.Adapter<MyViewHolder>(),Serializable {
 
-    var dataList: List<TournamentData>? = dataListt
+    var dataList: List<tournamentDataClass>? = dataListt
 
-    fun setSearchList(dataSearchList: List<TournamentData>) {
+    fun setSearchList(dataSearchList: List<tournamentDataClass>) {
         this.dataList = dataSearchList
         notifyDataSetChanged()
     }
@@ -43,8 +43,8 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 //        val base64toDrawable = base64ToDrawable( dataList?.get(position)?.tournamentLogo)
-        holder.binding.recTitle.setText(dataList!![position].tournamentName)
-        holder.binding.recLocation.setText(dataList!![position].tournamentLocation)
+        holder.binding.recTitle.setText(dataList!![position].name)
+        holder.binding.recLocation.setText(dataList!![position].ground)
         loadImage(position,holder)
 
         Log.d("TAGTournamentid", "onCreate: ${dataList?.get(position)?.tournamentId}")
@@ -64,8 +64,8 @@ class MyAdapter(val ctxt:Context ,val dataListt: List<TournamentData>?) :
         val options: RequestOptions = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .placeholder(R.drawable.circlelogo)
-            .error(R.drawable.circlelogo)
+            .placeholder(R.drawable.no_image_found)
+            .error(R.drawable.no_image_found)
 
         Glide.with(ctxt)
             .load(dataList?.get(position)?.tournamentLogo)

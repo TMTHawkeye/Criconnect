@@ -39,7 +39,7 @@ class TeamRegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityTeamRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+        selectedImageDrawable=getDrawable(R.drawable.no_image_found)
 
 
         team = getTeamData(this@TeamRegistrationActivity)
@@ -54,7 +54,7 @@ class TeamRegistrationActivity : AppCompatActivity() {
                 loadImage(this@TeamRegistrationActivity,binding.profileImg,team?.teamLogo)
             }
             else{
-                selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+                selectedImageDrawable=getDrawable(R.drawable.no_image_found)
             }
         }
 

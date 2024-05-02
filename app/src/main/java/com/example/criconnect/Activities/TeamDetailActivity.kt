@@ -59,8 +59,8 @@ class TeamDetailActivity : AppCompatActivity(), PlayerListner {
         val options: RequestOptions = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .placeholder(R.drawable.circlelogo)
-            .error(R.drawable.circlelogo)
+            .placeholder(R.drawable.no_image_found)
+            .error(R.drawable.no_image_found)
 
         Glide.with(this@TeamDetailActivity)
             .load(selectedTeam?.teamLogo)

@@ -169,7 +169,7 @@ class TeamRepository(val context: Context) {
         val allMatches = mutableListOf<MatchModel>()
 
         // Fetch all tournaments
-        firebaseDatabase?.getReference("TournamentManagement")?.addListenerForSingleValueEvent(
+        firebaseDatabase?.getReference("TournamentDetails")?.child("RegisteredTournaments")?.addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Iterate through each tournament
@@ -287,9 +287,10 @@ class TeamRepository(val context: Context) {
     }
 
 
+/*
     fun registerTeamInTournament(tournamentId: String?, callback: (Boolean) -> Unit) {
         val tournamentRef =
-            firebaseDatabase?.getReference("TournamentManagement")?.child("$tournamentId")
+            firebaseDatabase?.getReference("TournamentDetails")?.child("$tournamentId")
         val currentUser = getLoggedInUser()
 
         currentUser?.let { user ->
@@ -308,6 +309,67 @@ class TeamRepository(val context: Context) {
                             ?.addOnFailureListener {
                                 callback.invoke(false) // Indicate error occurred
                             }
+                    } else {
+                        callback.invoke(false) // Team does not exist, registration failed
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback.invoke(false) // Indicate error occurred
+                }
+            })
+        } ?: callback.invoke(false) // If currentUser is null, callback with false
+    }
+*/
+
+
+    fun registerTeamInTournament(tournamentId: String?, callback: (Boolean) -> Unit) {
+        val tournamentRef = firebaseDatabase?.getReference("TournamentDetails")?.child("RegisteredTournaments")?.child("$tournamentId")
+        val currentUser = getLoggedInUser()
+
+        currentUser?.let { user ->
+            val userTeamReference = firebaseDatabase?.getReference("TeamManagement")?.child(user.uid)
+
+            userTeamReference?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Team exists, proceed with registration
+                        val teamId = dataSnapshot.key // Assuming team ID is the key
+
+                        // Check if teamId already exists in requestsList
+                        tournamentRef?.child("requestsList")?.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(listSnapshot: DataSnapshot) {
+                                val requestsList = ArrayList<String>()
+
+                                if (listSnapshot.exists()) {
+                                    for (childSnapshot in listSnapshot.children) {
+                                        val requestId = childSnapshot.getValue(String::class.java)
+                                        requestId?.let {
+                                            requestsList.add(it)
+                                        }
+                                    }
+                                }
+
+                                // Add the new teamId to the requestsList if it's not already present
+                                if (!requestsList.contains(teamId)) {
+                                    requestsList.add(teamId!!)
+                                }
+
+                                // Update the requestsList in Firebase
+                                tournamentRef?.child("requestsList")?.setValue(requestsList)
+                                    ?.addOnSuccessListener {
+                                        callback.invoke(true) // Indicate success
+                                    }
+                                    ?.addOnFailureListener {
+                                        callback.invoke(false) // Indicate error occurred
+                                    }
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                callback.invoke(false) // Indicate error occurred
+                            }
+                        })
+
                     } else {
                         callback.invoke(false) // Team does not exist, registration failed
                     }
@@ -388,7 +450,7 @@ class TeamRepository(val context: Context) {
     }
 
 
-    fun getRegisteredTeamsInTournament(
+ /*   fun getRegisteredTeamsInTournament(
         tournamentId: String?,
         callback: (List<TeamModel>?) -> Unit
     ) {
@@ -415,7 +477,7 @@ class TeamRepository(val context: Context) {
                 callback.invoke(null)
             }
         })
-    }
+    }*/
 
     private fun fetchTeamsDetails(teamIds: List<String>, callback: (List<TeamModel>?) -> Unit) {
         val teamsReference = firebaseDatabase?.getReference("TeamManagement")
@@ -554,12 +616,12 @@ class TeamRepository(val context: Context) {
                     if (dataSnapshot.exists()) {
                         val teamData = dataSnapshot.value as? Map<*, *>
                         if (teamData != null) {
-                            val teamId = teamData["teamId"] as String ?: ""
+                            val teamId = teamData["teamId"] as? String ?: ""
                             val teamName = teamData["teamName"] as? String ?: ""
                             val captainName = teamData["captainName"] as? String ?: ""
                             val city = teamData["city"] as? String ?: ""
                             val homeGround = teamData["homeGround"] as? String ?: ""
-                            val teamLogo = teamData["teamLogo"] as String ?: ""
+                            val teamLogo = teamData["teamLogo"] as? String ?: ""
                             val wins = (teamData["wins"] as? Long?)?.toInt() ?: 0
                             val loss = (teamData["loss"] as? Long?)?.toInt() ?: 0
 
@@ -1060,14 +1122,14 @@ class TeamRepository(val context: Context) {
                 val teams = mutableListOf<TeamModel>()
                 for (teamSnapshot in dataSnapshot.children) {
                     val teamData = teamSnapshot.value as HashMap<*, *>
-                    val teamId = teamData["teamId"] as String
-                    val teamName = teamData["teamName"] as String
-                    val captainName = teamData["captainName"] as String
-                    val city = teamData["city"] as String
-                    val homeGround = teamData["homeGround"] as String
-                    val teamLogo = teamData["teamLogo"] as String
-                    val wins = teamData["wins"] as Long
-                    val loss = teamData["loss"] as Long
+                    val teamId = teamData["teamId"] as? String?:""
+                    val teamName = teamData["teamName"] as? String?:""
+                    val captainName = teamData["captainName"] as? String?:""
+                    val city = teamData["city"] as? String?:""
+                    val homeGround = teamData["homeGround"] as? String?:""
+                    val teamLogo = teamData["teamLogo"] as? String?:""
+                    val wins = teamData["wins"] as? Long?:0
+                    val loss = teamData["loss"] as? Long?:0
 
                     val team = TeamModel(
                         teamId = teamId,
@@ -1087,6 +1149,36 @@ class TeamRepository(val context: Context) {
             override fun onCancelled(databaseError: DatabaseError) {
                 // Handle database error
                 callback.invoke(emptyList()) // Return empty list in case of error
+            }
+        })
+    }
+
+
+    fun getRegisteredTeamsInTournament(
+        tournamentId: String?,
+        callback: (List<TeamModel>?) -> Unit
+    ) {
+        val tournamentRef =
+            firebaseDatabase?.getReference("TournamentDetails")?.child("RegisteredTournaments")?.child("$tournamentId")
+
+        tournamentRef?.child("teams")?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val teamIds = mutableListOf<String>()
+
+                for (teamSnapshot in dataSnapshot.children) {
+                    val teamId = teamSnapshot.key
+                    teamId?.let { teamIds.add(it) }
+                }
+
+                if (teamIds.isNotEmpty()) {
+                    fetchTeamsDetails(teamIds, callback)
+                } else {
+                    callback.invoke(emptyList())
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                callback.invoke(null)
             }
         })
     }

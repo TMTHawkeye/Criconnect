@@ -31,7 +31,7 @@ class PlayerProfileActivity : AppCompatActivity() {
         binding=ActivityPlayerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        selectedImageDrawable=getDrawable(R.drawable.circlelogo)
+        selectedImageDrawable=getDrawable(R.drawable.no_image_found)
 
         binding.saveButton.setOnClickListener {
             if (validateFields()) {

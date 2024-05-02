@@ -1,6 +1,5 @@
 package com.example.criconnect.ModelClasses
 
-import android.graphics.drawable.Drawable
 import java.io.Serializable
 
 data class TournamentData(

@@ -2,24 +2,17 @@ package com.example.criconnect.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.criconnect.CustomClasses.ReadWriteUserDetails
 import com.example.criconnect.R
 import com.example.criconnect.SplashLoginActivity
 import com.example.criconnect.ViewModels.UserViewModel
 import com.example.criconnect.databinding.ActivityUserProfileBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserProfileActivity : AppCompatActivity() {
@@ -38,7 +31,7 @@ class UserProfileActivity : AppCompatActivity() {
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userViewModel.showUserProfile { isEmailVerified, isuserDetailsAvailable, userData ->
+        userViewModel.showUserProfile("") { isEmailVerified, isuserDetailsAvailable, userData ->
             if (isEmailVerified) {
                 if (isuserDetailsAvailable) {
                     fullName = userData?.fullName

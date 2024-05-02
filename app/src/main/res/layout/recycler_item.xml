@@ -65,16 +65,19 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:layout_marginEnd="@dimen/_10sdp">
 
                     <TextView
+                        android:padding="@dimen/_5sdp"
+                        android:background="@color/colorPrimary"
+                        android:id="@+id/recLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Location"
-                        android:textColor="@color/lavender"
-                        android:textSize="18sp"
+                        android:text="Accept"
                         android:textAlignment="center"
-                        android:id="@+id/recLocation"/>
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </LinearLayout>

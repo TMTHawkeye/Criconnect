@@ -4,25 +4,19 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.criconnect.CustomClasses.ReadWriteUserDetails
+import com.example.criconnect.CustomSpinner
 import com.example.criconnect.ModelClasses.UserData
 import com.example.criconnect.R
 import com.example.criconnect.SplashLoginActivity
 import com.example.criconnect.ViewModels.UserViewModel
 import com.example.criconnect.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.FirebaseDatabase
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Calendar
 import java.util.regex.Matcher
@@ -42,6 +36,23 @@ class RegisterUserActivity : AppCompatActivity() {
         }
         Toast.makeText(this@RegisterUserActivity, "You can registered now", Toast.LENGTH_LONG)
             .show()
+        setSpinner()
+
+        binding.spinnerFruits.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                 binding.spinnerFruits.setSelection(position)// Get the selected item from the spinner
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do nothing if nothing is selected
+            }
+        })
 
         binding.radioGroupRegisterGender.clearCheck()
 
@@ -59,6 +70,7 @@ class RegisterUserActivity : AppCompatActivity() {
             )
             picker!!.show()
         })
+        
         val buttonRegister = findViewById<Button>(R.id.button_register)
         buttonRegister.setOnClickListener {
             val selectedGenderId: Int = binding.radioGroupRegisterGender.getCheckedRadioButtonId()
@@ -160,10 +172,27 @@ class RegisterUserActivity : AppCompatActivity() {
                 //Clear the enterned password
                 binding.editTextRegisterPassword.clearComposingText()
                 binding.editTextRegisterConfirmPassword.clearComposingText()
-            } else {
+            }
+            else if(!binding.checkBoxTermsConditions.isChecked){
+                Toast.makeText(this@RegisterUserActivity, "You must check terms and conditions!", Toast.LENGTH_SHORT).show()
+            }
+            else {
                 textGender = binding.textViewRegisterGender.getText().toString()
                 binding.progressBar.setVisibility(View.VISIBLE)
-                registerUser(textFullName, textEmail, textDoB, textGender, textMobile, textPwd)
+
+                registerUser(
+                    textFullName,
+                    textEmail,
+                    textDoB,
+                    textGender,
+                    textMobile,
+                    textPwd,
+                    binding.spinnerFruits.selectedItem.toString()
+                )
+//                registerUser(textFullName, textEmail, textDoB, textGender, textMobile, textPwd)
+
+
+
             }
         }
     }
@@ -175,10 +204,11 @@ class RegisterUserActivity : AppCompatActivity() {
         textDoB: String,
         textGender: String,
         textMobile: String,
-        textPwd: String
+        textPwd: String,
+        selectedItem: String
     ) {
-        val userData = UserData(textFullName, textEmail, textDoB, textGender, textMobile, textPwd)
-        userViewModel.registerUser(userData, this) { isSuccessful, isExceptionOccured , exceptionMessage->
+        val userData = UserData(textFullName, textEmail, textDoB, textGender, textMobile, textPwd,selectedItem)
+        userViewModel.registerUser(userData,selectedItem, this) { isSuccessful, isExceptionOccured , exceptionMessage->
             if(!isExceptionOccured) {
                 if (isSuccessful) {
                     val intent = Intent(this@RegisterUserActivity, SplashLoginActivity::class.java)
@@ -202,12 +232,21 @@ class RegisterUserActivity : AppCompatActivity() {
                 binding.progressBar.setVisibility(View.GONE)
             }
             else{
-                binding.editTextRegisterPassword.setError(exceptionMessage)
-                binding.editTextRegisterPassword.requestFocus()
+                binding.editTextRegisterEmail.setError(exceptionMessage)
+                binding.editTextRegisterEmail.requestFocus()
                 binding.progressBar.setVisibility(View.GONE)
             }
 
         }
 
+    }
+
+    fun setSpinner() {
+        val spinner: CustomSpinner = findViewById(R.id.spinner_fruits)
+        val items = arrayOf("Captain", "Organizer", "Admin")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.setAdapter(adapter)
+        spinner.setSelection(0)
     }
 }

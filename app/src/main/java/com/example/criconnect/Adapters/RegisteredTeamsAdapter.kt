@@ -1,5 +1,6 @@
 package com.example.criconnect.Adapters
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import com.example.criconnect.R
 import com.example.criconnect.databinding.ItemTournamentBinding
 
 class RegisteredTeamsAdapter(
-    val ctxt: TournamentDetailActivity,
+    val ctxt: Context,
     val teamsList: List<TeamModel>?,
     val tournamentId: String?
 ) : RecyclerView.Adapter<RegisteredTeamsAdapter.viewHolder>() {
@@ -54,8 +55,8 @@ class RegisteredTeamsAdapter(
         val options: RequestOptions = RequestOptions()
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            .placeholder(R.drawable.circlelogo)
-            .error(R.drawable.circlelogo)
+            .placeholder(R.drawable.no_image_found)
+            .error(R.drawable.no_image_found)
 
         Glide.with(ctxt)
             .load(teamsList?.get(position)?.teamLogo)

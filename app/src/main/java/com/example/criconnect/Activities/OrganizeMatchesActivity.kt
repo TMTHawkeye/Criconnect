@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.criconnect.Adapters.MatchesAdapter
 import com.example.criconnect.HelperClasses.Constants.generateMatches
 import com.example.criconnect.ModelClasses.MatchModel
+import com.example.criconnect.ModelClasses.tournamentDataClass
 import com.example.criconnect.ViewModels.TeamViewModel
 import com.example.criconnect.databinding.ActivityOrganizeMatchesBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,9 +21,10 @@ import java.io.Serializable
 class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
     lateinit var binding: ActivityOrganizeMatchesBinding
     val dataViewModel: TeamViewModel by viewModel()
-    var selectedTournamentId: String? = null
-    var selectedTournamentOwnerName: String? = null
-    var selectedTournamentName: String? = null
+    var selectedTournament : tournamentDataClass?=null
+//    var selectedTournamentId: String? = null
+//    var selectedTournamentOwnerName: String? = null
+//    var selectedTournamentName: String? = null
     var matches: List<MatchModel>? = null
     var isOwner = false
 
@@ -52,8 +54,8 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
             MatchesAdapter(
                 this@OrganizeMatchesActivity,
                 matchesList,
-                selectedTournamentId,
-                selectedTournamentOwnerName,
+                selectedTournament?.tournamentId,
+                selectedTournament?.organizerName,
                 isOwner
             )
 
@@ -73,35 +75,38 @@ class OrganizeMatchesActivity : AppCompatActivity(), Serializable {
 
     override fun onResume() {
         super.onResume()
-        selectedTournamentId = intent?.getStringExtra("selectedTournament")
-        selectedTournamentOwnerName = intent?.getStringExtra("tournamentOwnerID")
-        selectedTournamentName = intent?.getStringExtra("tournamentName")
-        binding.titleTournament.text = selectedTournamentName
+//        selectedTournamentId = intent?.getStringExtra("selectedTournament")
+//        selectedTournamentOwnerName = intent?.getStringExtra("tournamentOwnerID")
+//        selectedTournamentName = intent?.getStringExtra("tournamentName")
+        selectedTournament =
+            intent?.getSerializableExtra("selectedTournament") as tournamentDataClass
+        binding.titleTournament.text = selectedTournament?.name
 
-        binding.progressBar.visibility= View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
 
-        if (selectedTournamentOwnerName?.equals(dataViewModel.getLoggedInUser()?.uid) == true) {
+        if (selectedTournament?.tournamentId?.equals(dataViewModel.getLoggedInUser()?.uid) == true) {
             isOwner = true
         } else {
             isOwner=false
         }
-
-        dataViewModel.getMatchesForTournament(selectedTournamentId) { existingMatches ->
-            if (existingMatches?.size == 0) {
-                dataViewModel.getRegisteredTeamsInTournament(selectedTournamentId) { registeredTeams ->
-                    matches = generateMatches(registeredTeams)
+        selectedTournament?.let {
+            dataViewModel.getMatchesForTournament(it.tournamentId) { existingMatches ->
+                if (existingMatches?.size == 0) {
+                    dataViewModel.getRegisteredTeamsInTournament(it.tournamentId) { registeredTeams ->
+                        matches = generateMatches(registeredTeams)
+                        matches?.let {match->
+                            storeMatchesInDatabase(it.tournamentId, match)
+                        }
+                    }
+                } else {
+                    matches = existingMatches
                     matches?.let {
-                        storeMatchesInDatabase(selectedTournamentId, it)
+                        setAdapter(it)
                     }
                 }
-            } else {
-                matches = existingMatches
-                matches?.let {
-                    setAdapter(it)
-                }
-            }
-            binding.progressBar.visibility= View.GONE
+                binding.progressBar.visibility = View.GONE
 
+            }
         }
     }
 

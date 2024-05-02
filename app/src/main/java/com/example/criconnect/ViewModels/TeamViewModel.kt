@@ -6,6 +6,7 @@ import com.example.criconnect.ModelClasses.MatchModel
 import com.example.criconnect.ModelClasses.PlayerData
 import com.example.criconnect.ModelClasses.TeamModel
 import com.example.criconnect.ModelClasses.TournamentData
+import com.example.criconnect.ModelClasses.tournamentDataClass
 import com.example.criconnect.Repositories.TeamRepository
 import com.google.firebase.auth.FirebaseUser
 
@@ -49,6 +50,8 @@ class TeamViewModel(val repository: TeamRepository) : ViewModel() {
     fun getTeamData(callback: (TeamModel?, Boolean) -> Unit) {
         repository.getTeamFromFirebase(callback)
     }
+
+
 
     fun storeMatchesinFirebase(
         tournamentId: String?,
